@@ -1,0 +1,1 @@
+window.onload=function(){"use strict";var t=new GameState;t.init(".js--state")};
