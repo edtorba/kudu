@@ -28,7 +28,7 @@
  *
  * COMPONENTS
  * Wrapper................Wrapping and constraining elements.
- * Status.................Game status/frame component.
+ * State..................Game status/frame component.
  *
  * 
  * TRUMPS
@@ -82,7 +82,7 @@
  * Components
  */
 @import 'components/wrapper';
-@import 'components/status';
+@import 'components/state';
 
 
 

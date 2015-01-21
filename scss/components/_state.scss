@@ -1,7 +1,7 @@
 /*------------------------------------*\
-    $STATUS
+    $STATE
 \*------------------------------------*/
-.status {
+.state {
     position: absolute;
     top: 0;
     right: 0;
@@ -9,12 +9,12 @@
     left: 0;
 }
 
-    .status__active {
+    .state__active {
         display: block;
         visibility: visible;
     }
 
-    .status__inactive {
+    .state__inactive {
         display: none;
         visibility: visible;
     }
