@@ -52,32 +52,18 @@
     
     &:hover {
         background-color: $base-ui-color--ascent;
-    }
-}
-
-.btn--dark {
-    background-color: $base-ui-color--ascent;
-    color: $base-font-color--ascent;
-    
-    &:hover {
-        background-color: $base-ui-color;
-    }
-}
-
-.btn--transparent {
-    border: 3px solid;
-    border-color: $base-font-color--ascent;
-    background-color: transparent;
-    color: $base-font-color--ascent;
-    
-    &:hover {
-        border-color: $base-font-color;
         color: $base-font-color;
     }
 }
 
-.btn--rounded {
-    @include vendor(border-radius, $base-radius);
+.btn--dark {
+    background-color: $base-ui-color;
+    color: $base-font-color--ascent;
+    
+    &:hover {
+        background-color: $base-font-color;
+        color: $base-ui-color--ascent;
+    }
 }
 
 
