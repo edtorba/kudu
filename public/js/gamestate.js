@@ -26,12 +26,12 @@ GameState.prototype.add = function(name, elem) {
 // Switch to X section
 GameState.prototype.switchto = function(name) {
 
-    // Hide all frames
+    // Hide all sections
     for (var prop in this.sections) {
         this.hide(this.sections[prop]);
     };
     
-    // Show requested frame
+    // Show requested section
     this.show(this.sections[name]);
 };
 
