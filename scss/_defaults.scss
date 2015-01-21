@@ -1,0 +1,182 @@
+/*------------------------------------*\
+    $DEFAULTS
+\*------------------------------------*/
+/**
+* Control panel of all components, objects and abrastractions. To introduce 
+* objects and abstractions simply switch false to true and vice versa.
+*/
+
+
+
+
+
+/*------------------------------------*\
+    $DEBUG
+\*------------------------------------*/
+$debug-mode: true;
+
+
+
+
+
+/*------------------------------------*\
+    $BORDER-BOX
+\*------------------------------------*/
+/**
+ * Do you want all elements to adopt `box-sizing:border-box;` as per
+ * paulirish.com/2012/box-sizing-border-box-ftw ?
+ */
+$global-border-box: true !default;
+
+
+
+
+
+ /*------------------------------------*\
+    $MOBILE-FIRST
+\*------------------------------------*/
+$mobile-first: true !default;
+
+
+
+
+
+/*------------------------------------*\
+    $BASE
+\*------------------------------------*/
+/**
+ * Base width in pixels aka max-width for wrapper.
+ */
+$base-width: 1280px !default;
+
+/**
+ * Base font-family.
+ */
+$base-font-family: 'Varela Round', sans-serif !default;
+
+/**
+ * Base stuff.
+ */
+$base-font-size:   20px !default;
+$base-line-height: 28px !default;
+
+/**
+ * Base radius
+ */
+$base-radius: 4px !default;
+
+
+
+
+
+/*------------------------------------*\
+    $COLOURS
+\*------------------------------------*/
+/**
+ * Base background colours.
+ */
+$base-background-color: #fff !default;
+$base-background-color--ascent: #ededf1 !default;
+
+/**
+ * Base font colours.
+ */
+$base-font-color: #78879f !default;
+$base-font-color--ascent: #2e3845 !default;
+
+/**
+ * Default colour for objects’, borders etc.
+ */
+$base-ui-color: #fcb116 !default;
+$base-ui-color--ascent: #26303b !default;
+
+
+
+
+/*------------------------------------*\
+    $FONT-SIZES
+\*------------------------------------*/
+/**
+ * Font-sizes (in pixels). Refer to relevant sections for their implementations.
+ */
+$giga-size:         96px!default;
+$mega-size:         72px!default;
+$kilo-size:         48px!default;
+
+$h1-size:           36px!default; // .alpha
+$h2-size:           30px!default; // .beta
+$h3-size:           24px!default; // .gamma
+$h4-size:           20px!default; // .delta
+$h5-size:           16px!default; // .epsilon
+$h6-size:           14px!default; // .zeta
+
+$milli-size:        12px!default;
+$micro-size:        10px!default;
+
+
+
+
+
+/*------------------------------------*\
+    $FRAMEWORK
+\*------------------------------------*/
+/**
+ * SASS will work these next ones out for use within the framework.
+ *
+ * Assign our `$base-line-height` to a new spacing var for more transparency.
+ */
+$base-spacing-unit: $base-line-height;
+$half-spacing-unit: $base-spacing-unit / 2 !default;
+$line-height-ratio: $base-line-height / $base-font-size;
+
+
+
+
+
+/*------------------------------------*\
+    $BREAKPOINTS
+\*------------------------------------*/
+/**
+ * palm     --  palm-based devices, like phones and small tablets
+ * lap      --  lap-based devices, like iPads or laptops
+ * portable --  all of the above
+ * desk     --  stationary devices, like desktop computers
+ * regular  --  any/all types of device
+ *
+ * These namespaces are then used in the library to give you the ability to
+ * manipulate your layouts based around them, for example:
+ *
+   <div class="grid__item  one-whole  lap--one-half  desk--one-third">
+ */
+$breakpoints: (
+    'palm' '(max-width: 480px)',
+    'lap' '(min-width: 481px) and (max-width: 1024px)',
+    'portable' '(max-width: 1024px)',
+    'desk' '(min-width: 1025px)'
+) !default;
+
+
+/**
+ * Define which namespaced breakpoints you would like to generate for each of
+ * widths and push. This is handy if you only need pull on, say, desk, or
+ * you only need a new width breakpoint at mobile sizes. It allows you to only
+ * compile as much CSS as you need. `lap`+ are turned on by default, but you can
+ * add and remove breakpoints at will.
+ */
+$breakpoint-has-widths: ('palm', 'lap', 'portable', 'desk') !default;
+
+
+/**
+ * Would you like push classes enabled?
+ */
+$push:                  true !default;
+$breakpoint-has-push:   ('lap', 'portable', 'desk') !default;
+
+
+
+
+
+/*------------------------------------*\
+    $GRID
+\*------------------------------------*/
+$gutter: 24px !default;

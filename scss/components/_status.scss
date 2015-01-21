@@ -1,0 +1,20 @@
+/*------------------------------------*\
+    $STATUS
+\*------------------------------------*/
+.status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+    .status__active {
+        display: block;
+        visibility: visible;
+    }
+
+    .status__inactive {
+        display: none;
+        visibility: visible;
+    }

@@ -1,0 +1,124 @@
+/*------------------------------------*\
+    $BUTTONS
+\*------------------------------------*/
+/**
+ * Base button styles.
+ */
+.btn {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: 85%;
+    font-weight: 600;
+    cursor: pointer;
+    border: 0;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 3;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-top: $base-spacing-unit;
+    @include vendor(transition, all ease-in-out 0.2s);
+}
+
+.btn {
+    
+    &,
+    &:hover {
+        text-decoration: none;  
+    }
+
+    &:active,
+    &:focus {
+        outline: none;
+    }
+}
+
+
+
+
+
+/*------------------------------------*\
+    $SKINS
+\*------------------------------------*/
+/**
+ * Button skin modifiers.
+ */
+.btn--bright {
+    background-color: $base-ui-color;
+    color: $base-font-color--ascent;
+    
+    &:hover {
+        background-color: $base-ui-color--ascent;
+    }
+}
+
+.btn--dark {
+    background-color: $base-ui-color--ascent;
+    color: $base-font-color--ascent;
+    
+    &:hover {
+        background-color: $base-ui-color;
+    }
+}
+
+.btn--transparent {
+    border: 3px solid;
+    border-color: $base-font-color--ascent;
+    background-color: transparent;
+    color: $base-font-color--ascent;
+    
+    &:hover {
+        border-color: $base-font-color;
+        color: $base-font-color;
+    }
+}
+
+.btn--rounded {
+    @include vendor(border-radius, $base-radius);
+}
+
+
+
+
+
+/*------------------------------------*\
+    $SIZES
+\*------------------------------------*/
+/**
+ * Button size modifiers.
+ *
+ * These all follow the same sizing rules as above; text is 1em, space around it
+ * remains uniform.
+ */
+.btn--small {
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    line-height: 2;
+}
+
+.btn--large {
+    padding-right: 2em;
+    padding-left: 2em;
+    line-height: 4;
+}
+
+.btn--huge {
+    padding-right: 2.5em;
+    padding-left: 2.5em;
+    line-height: 5;
+}
+
+/**
+ * These buttons will fill the entirety of their container.
+ *
+ * 1. Remove padding so that widths and paddings don’t conflict.
+ */
+.btn--full {
+    width: 100%;
+    padding-right: 0;            /* [1] */
+    padding-left: 0;            /* [1] */
+    text-align: center;
+}
