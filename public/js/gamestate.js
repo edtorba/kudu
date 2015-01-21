@@ -38,15 +38,15 @@ GameState.prototype.switchto = function(name) {
 // Hide section
 GameState.prototype.hide = function(elem) {
     
-    this.removeClass(elem, this.showClass);
-    this.addClass(elem, this.hideClass);
+    this.removeClass(elem, this.active);
+    this.addClass(elem, this.inactive);
 };
 
 // Show section
 GameState.prototype.show = function(elem) {
     
-    this.removeClass(elem, this.hideClass);
-    this.addClass(elem, this.showClass);
+    this.removeClass(elem, this.inactive);
+    this.addClass(elem, this.active);
 };
 
 // Remove class
