@@ -9,16 +9,12 @@
     left: 0;
 }
 
-    .state__active {
+    .state--active {
         display: block;
         visibility: visible;
     }
 
-    .state__inactive {
+    .state--inactive {
         display: none;
         visibility: visible;
-    }
-
-    .state__centered-contents {
-        text-align: center;
     }
