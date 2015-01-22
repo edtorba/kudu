@@ -1,0 +1,1 @@
+module.exports=function(o){o.get("/",function(o,t){t.sendFile("game.html",{root:"public"})}),o.get("/controller",function(o,t){t.sendFile("controller.html",{root:"public"})})};
