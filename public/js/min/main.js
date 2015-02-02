@@ -1,1 +1,1 @@
-window.onload=function(){"use strict";var t=new GameState;t.init(".js--state"),t.switchto("main-menu")};
+window.onload=function(){"use strict";var t=new GameState;t.init(".js--state"),t.switchto("main-menu");var n=document.querySelector(".js--main-menu--start");n.onclick=function(n){n.preventDefault(),t.switchto("connecting")};var e=document.querySelector(".js--connecting--ready");e.onclick=function(n){n.preventDefault(),t.switchto("waiting-for-cars")}};
