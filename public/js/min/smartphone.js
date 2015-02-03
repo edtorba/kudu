@@ -1,0 +1,1 @@
+window.onload=function(){"use strict";var e=new GameState;e.init(".js--state"),e.switchto("enter-code");new Controller(".js--control-pad",".js--button-x"),new Fullscreen(".js--fullscreen")};
