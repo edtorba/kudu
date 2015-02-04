@@ -1,0 +1,34 @@
+/*------------------------------------*\
+    $INPUTS
+\*------------------------------------*/
+/**
+ * Base input styles.
+ */
+.input {
+    display: inline-block;
+    vertical-align: middle;
+    font-family: inherit;
+    font-size: 85%;
+    border: 1px solid;
+    border-color: $base-font-color;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 3;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-top: $base-spacing-unit;
+    @include vendor(transition, all ease-in-out 0.2s);
+}
+
+/**
+ * These buttons will fill the entirety of their container.
+ *
+ * 1. Remove padding so that widths and paddings don’t conflict.
+ */
+.input--full {
+    display: block;
+    width: 100%;
+    padding-right: 0;            /* [1] */
+    padding-left: 0;            /* [1] */
+}

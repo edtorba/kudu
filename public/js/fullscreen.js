@@ -9,6 +9,9 @@ Fullscreen.prototype.toggleFullscreen = function() {
     this.btn.onclick = function(e) {
         e.preventDefault();
 
+        toggleClass(this, 'icon--resize-full');
+        toggleClass(this, 'icon--resize-small');
+
         // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
         if (!document.fullscreenElement &&    // alternative standard method
         !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
@@ -35,6 +38,6 @@ Fullscreen.prototype.toggleFullscreen = function() {
                 document.webkitExitFullscreen();
             }
 
-        }   
+        }
     }
 };

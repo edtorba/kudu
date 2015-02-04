@@ -1,0 +1,12 @@
+/*------------------------------------*\
+    $LINKS
+\*------------------------------------*/
+a {
+    color: $base-ui-color--ascent;
+    text-decoration: none;
+    @include vendor(transition, all ease-in-out 0.2s);
+
+    &:hover {
+        color: $base-ui-color;
+    }
+}

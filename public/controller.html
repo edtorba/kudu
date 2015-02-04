@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
 <body>
+    <a href="#" class="js--fullscreen fullscreen icon--resize-full">&nbsp;</a>
     <section class="state state--active js--state" data-game="loading">
         <span class="spinner">spinner</span>
     </section>
@@ -15,19 +16,17 @@
             <div class="grid">
                 <div class="grid__item desk--one-half lap--two-thirds">
                     <h1>Enter code</h1>
-                    <input type="name" class="js--enter-code--code" />
+                    <input type="name" class="js--enter-code--code input" />
                     <button type="button" class="btn btn--bright js--main-menu--start">Start</button>
-
-                    <div class="js--control-pad">Pad</div>
-                    <div class="js--fullscreen">Bazinga</div>
                 </div><!-- .grid__item -->
             </div><!-- .grid -->
         </div><!-- .wrapper -->
     </section><!-- .state -->
 
+    <script src="js/min/static.js"></script>
     <script src="js/min/gamestate.js"></script>
     <script src="js/controller.js"></script>
-    <script src="js/min/fullscreen.js"></script>
+    <script src="js/fullscreen.js"></script>
     <script src="js/smartphone.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
