@@ -1,0 +1,1 @@
+module.exports={generate:function(e,n){var r="";n.indexOf("a")>-1&&(r+="abcdefghijklmnopqrstuvwxyz"),n.indexOf("A")>-1&&(r+="ABCDEFGHIJKLMNOPQRSTUVWXYZ"),n.indexOf("#")>-1&&(r+="0123456789"),n.indexOf("!")>-1&&(r+="~`!@#$%^&*()_+-={}[]:\";'<>?,./|\\");for(var a="",d=e;d>0;--d)a+=r[Math.round(Math.random()*(r.length-1))];return a}};

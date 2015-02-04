@@ -14,7 +14,7 @@
     margin: 0;
     padding-top: 0;
     padding-bottom: 0;
-    line-height: 3;
+    line-height: 2.9;
     padding-right: 1.5em;
     padding-left: 1.5em;
     margin-top: $base-spacing-unit;
@@ -29,6 +29,6 @@
 .input--full {
     display: block;
     width: 100%;
-    padding-right: 0;            /* [1] */
+    padding-right: 0;           /* [1] */
     padding-left: 0;            /* [1] */
 }
