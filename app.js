@@ -3,6 +3,7 @@ var app     = express();
 var http    = require('http').Server(app);
 var io      = require('socket.io')(http);
 var code    = require('./components/code');
+var gameRooms = require('./components/gameRooms');
 
 // Make "public" folder publicly accessible
 app.use(express.static(__dirname + '/public'));
@@ -22,6 +23,9 @@ io.on('connection', function(socket) {
     socket.on('createRoom', function() {
         var roomCode = code.generate(5, '#aA');
 
+        // Add new room to our list
+        gameRooms.create(roomCode);
+
         // Attach room name to a socket
         socket.roomCode = roomCode;
 
@@ -30,6 +34,17 @@ io.on('connection', function(socket) {
 
         // Send to current request socket client
         socket.emit('connecting', roomCode);
+    });
+
+    // Join room
+    socket.on('joinRoom', function(roomCode) {
+        
+        // Check if room exists
+        if (gameRooms.exists(roomCode)) {
+            console.log('Room exists');
+        } else {
+            console.log('Room does not exist');
+        }
     });
 });
 

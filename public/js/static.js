@@ -14,3 +14,8 @@ function toggleClass(elem, className) {
         elem.className = classes.join(' ');
     }
 };
+
+
+function isEmpty(text) {
+    return (text.length === 0 || !text.trim());
+};
