@@ -26,3 +26,13 @@ function Game() {
     // TODO
     this.people = [];
 };
+
+// Add client to people list
+Game.prototype.addPerson = function(id) {
+    this.people.push(id);
+};
+
+// Check if client is in people list
+Game.prototype.inList = function(id) {
+    return this.people.indexOf(id) != -1 ? true : false;
+};

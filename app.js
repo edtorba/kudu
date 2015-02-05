@@ -41,9 +41,33 @@ io.on('connection', function(socket) {
         
         // Check if room exists
         if (gameRooms.exists(roomCode)) {
-            console.log('Room exists');
+
+            // Check if client is already in room
+            if (!gameRooms.list[roomCode].inList(socket.id)) {
+                // Join room
+                socket.join(roomCode);
+
+                // Add client to list
+                gameRooms.list[roomCode].addPerson(socket.id);
+
+                // Send to current request socket client response message
+                socket.emit('joinRoomStat', {
+                    'status': true,
+                    'error': null
+                });
+            } else {
+                // Send to current request socket client response message
+                socket.emit('joinRoomStat', {
+                    'status': false,
+                    'error': 'Client is already part of that group'
+                });
+            }
         } else {
-            console.log('Room does not exist');
+            // Send to current request socket client response message
+            socket.emit('joinRoomStat', {
+                'status': false,
+                'error': 'Wrong room code'
+            });
         }
     });
 });
