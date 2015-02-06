@@ -16,6 +16,7 @@
             <div class="grid">
                 <div class="grid__item desk--one-half lap--two-thirds">
                     <h1>Enter code</h1>
+                    <p>To join, please enter given code</p>
                     <input type="name" class="js--enter-code--code input" />
                     <button type="button" class="btn btn--bright js--enter-code--join">Join</button>
                 </div><!-- .grid__item -->
@@ -33,8 +34,16 @@
         </div><!-- .wrapper -->
     </section><!-- .state -->
 
+    <div class="overlay js--overlay"></div>
+    <div class="mowin mowin--branded js--mowin">
+        <div class="mowin__toolbar">
+            <a class="mowin__toobar-link icon--cancel js--mowin--close" href="#"></a>
+        </div><!-- .mowin__toolbar -->
+        <div class="mowin__container js--mowin--container"></div><!-- .mowin__container -->
+    </div><!-- .mowin -->
     <script src="js/min/static.js"></script>
     <script src="js/min/gamestate.js"></script>
+    <script src="js/mowin.js"></script>
     <script src="js/controller.js"></script>
     <script src="js/fullscreen.js"></script>
     <script src="js/smartphone.js"></script>

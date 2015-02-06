@@ -5,6 +5,8 @@ window.onload = function() {
     gameState.init('.js--state');
     gameState.switchto('enter-code');
 
+    var mowin = new Mowin();
+
     // Controller
     // var controller = new Controller('.js--control-pad', '.js--button-x');
 
@@ -33,7 +35,8 @@ window.onload = function() {
             // Wait for for other players
             gameState.switchto('waiting-for-players');
         } else {
-            // TODO: Show error message
+            mowin.setText(resp.error);
+            mowin.toggle();
         }
     });
 };

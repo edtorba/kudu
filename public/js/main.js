@@ -5,6 +5,8 @@ window.onload = function() {
     gameState.init('.js--state');
     gameState.switchto('main-menu');
 
+    var mowin = new Mowin();
+
     /**
      * Main menu
      */

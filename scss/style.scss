@@ -31,6 +31,7 @@
  *
  *
  * COMPONENTS
+ * Mowin..................Modal window.
  * Wrapper................Wrapping and constraining elements.
  * State..................Game status/frame component.
  *
@@ -90,6 +91,7 @@
 /**
  * Components
  */
+@import 'components/mowin';
 @import 'components/wrapper';
 @import 'components/state';
 
