@@ -4,8 +4,8 @@ function GameRooms() {
     this.list = {};
 };
 
-GameRooms.prototype.create = function(roomName) {
-    this.list[roomName] = new Game();
+GameRooms.prototype.create = function(roomName, owner) {
+    this.list[roomName] = new Game(owner);
 };
 
 GameRooms.prototype.exists = function(roomName) {
@@ -22,8 +22,9 @@ GameRooms.prototype.destroy = function(roomName) {
 
 module.exports = new GameRooms();
 
-function Game() {
+function Game(owner) {
     // TODO
+    this.owner = owner;
     this.people = [];
 };
 

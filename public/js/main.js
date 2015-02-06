@@ -25,6 +25,7 @@ window.onload = function() {
      */
     var connectingReadyBtn = document.querySelector('.js--connecting--ready');
     var connectingCode = document.querySelector('.js--connecting--code');
+    var connectingConnectingPlayers = document.querySelector('.js--connecting--players');
 
     socket.on('connecting', function(code) {
         connectingCode.innerHTML = code;
@@ -34,4 +35,8 @@ window.onload = function() {
         e.preventDefault();
         gameState.switchto('waiting-for-cars');
     }
+
+    socket.on('connectedPeople', function(numb) {
+        connectingConnectingPlayers.innerHTML = numb;
+    });
 };

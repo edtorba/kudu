@@ -24,7 +24,7 @@ io.on('connection', function(socket) {
         var roomCode = code.generate(5, '#aA');
 
         // Add new room to our list
-        gameRooms.create(roomCode);
+        gameRooms.create(roomCode, socket.id);
 
         // Attach room name to a socket
         socket.roomCode = roomCode;
@@ -51,20 +51,26 @@ io.on('connection', function(socket) {
                 gameRooms.list[roomCode].addPerson(socket.id);
 
                 // Send to current request socket client response message
-                socket.emit('joinRoomStat', {
+                socket.emit('joinRoomStatus', {
                     'status': true,
                     'error': null
                 });
+
+                // sending to individual socketid
+                socket.broadcast.to(gameRooms.list[roomCode].owner).emit(
+                    'connectedPeople',
+                    gameRooms.list[roomCode].people.length
+                );
             } else {
                 // Send to current request socket client response message
-                socket.emit('joinRoomStat', {
+                socket.emit('joinRoomStatus', {
                     'status': false,
                     'error': 'Client is already part of that group'
                 });
             }
         } else {
             // Send to current request socket client response message
-            socket.emit('joinRoomStat', {
+            socket.emit('joinRoomStatus', {
                 'status': false,
                 'error': 'Wrong room code'
             });

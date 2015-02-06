@@ -30,7 +30,7 @@ window.onload = function() {
         }
     };
 
-    socket.on('joinRoomStat', function(resp) {
+    socket.on('joinRoomStatus', function(resp) {
         if (resp.status) {
             // Wait for for other players
             gameState.switchto('waiting-for-players');
