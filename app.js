@@ -15,8 +15,28 @@ io.on('connection', function(socket) {
 
     // User connected or disconnected block
     console.log('a user connected: ' + socket.id);
+
     socket.on('disconnect', function() {
-        console.log('user disconnect: ' + socket.id);
+        console.log('User disconnected: ' + socket.id);
+
+        // Check if client was part of the group
+        if (typeof socket.roomCode !== 'undefined') {
+            // Check if client was a room owner
+            if (gameRooms.list[socket.roomCode].owner == socket.id) {
+                // Client was a room owner we have to kick evryone else
+
+                // TODO
+            } else if (gameRooms.list[socket.roomCode].inList(socket.id)) {
+                // Client was a player within a room X, so we have to remove him
+                gameRooms.list[socket.roomCode].killClient(socket.id);
+
+                // Sending number of connected people to owner
+                socket.broadcast.to(gameRooms.list[socket.roomCode].owner).emit(
+                    'connectedPeople',
+                    gameRooms.list[socket.roomCode].people.length
+                );
+            }
+        }
     });
 
     // Create room
@@ -26,7 +46,7 @@ io.on('connection', function(socket) {
         // Add new room to our list
         gameRooms.create(roomCode, socket.id);
 
-        // Attach room name to a socket
+        // Attach room code to a socket
         socket.roomCode = roomCode;
 
         // Join room
@@ -44,11 +64,14 @@ io.on('connection', function(socket) {
 
             // Check if client is already in room
             if (!gameRooms.list[roomCode].inList(socket.id)) {
+                // Attach room code to a socket
+                socket.roomCode = roomCode;
+
                 // Join room
                 socket.join(roomCode);
 
                 // Add client to list
-                gameRooms.list[roomCode].addPerson(socket.id);
+                gameRooms.list[roomCode].addClient(socket.id);
 
                 // Send to current request socket client response message
                 socket.emit('joinRoomStatus', {
@@ -56,7 +79,7 @@ io.on('connection', function(socket) {
                     'error': null
                 });
 
-                // sending to individual socketid
+                // Sending number of connected people to owner
                 socket.broadcast.to(gameRooms.list[roomCode].owner).emit(
                     'connectedPeople',
                     gameRooms.list[roomCode].people.length
