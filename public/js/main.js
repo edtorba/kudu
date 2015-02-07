@@ -8,6 +8,16 @@ window.onload = function() {
     var mowin = new Mowin();
 
     /**
+     * Disconnect
+     */
+    socket.on('disconnect', function() {
+        gameState.switchto('main-menu');
+        mowin.setText('The game connection has been lost.');
+        mowin.toggle();
+        // TODO : reset game
+    });
+
+    /**
      * Main menu
      */
     var mainMenuStartBtn = document.querySelector('.js--main-menu--start');

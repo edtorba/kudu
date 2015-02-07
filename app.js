@@ -23,12 +23,23 @@ io.on('connection', function(socket) {
         if (typeof socket.roomCode !== 'undefined') {
             // Check if client was a room owner
             if (gameRooms.list[socket.roomCode].owner == socket.id) {
-                // Client was a room owner we have to kick evryone else
+                // Leave room
+                socket.leave(socket.roomCode);
 
-                // TODO
+                // Destroy game
+                gameRooms.destroy(socket.roomCode);
+
+                // Client was a room owner, now we have to kick evryone else
+                io.to(socket.roomCode).emit('ownerLeft', {
+                    'status': null,
+                    'error': 'Room owner has left the game. The game connection has been lost.'
+                });
             } else if (gameRooms.list[socket.roomCode].inList(socket.id)) {
                 // Client was a player within a room X, so we have to remove him
                 gameRooms.list[socket.roomCode].killClient(socket.id);
+
+                // Leave room
+                socket.leave(socket.roomCode);
 
                 // Sending number of connected people to owner
                 socket.broadcast.to(gameRooms.list[socket.roomCode].owner).emit(

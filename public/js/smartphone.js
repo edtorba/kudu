@@ -14,6 +14,26 @@ window.onload = function() {
     var fullscreen = new Fullscreen('.js--fullscreen');
 
     /**
+     * Room owner left.
+     */
+    socket.on('ownerLeft', function(resp) {
+        gameState.switchto('enter-code');
+        mowin.setText(resp.error);
+        mowin.toggle();
+        // TODO : reset game
+    });
+
+    /**
+     * Disconnect
+     */
+    socket.on('disconnect', function() {
+        gameState.switchto('enter-code');
+        mowin.setText('The game connection has been lost.');
+        mowin.toggle();
+        // TODO : reset game
+    });
+
+    /**
      * Enter code.
      */
     var enterCodeJoinBtn = document.querySelector('.js--enter-code--join');
@@ -34,6 +54,9 @@ window.onload = function() {
         if (resp.status) {
             // Wait for for other players
             gameState.switchto('waiting-for-players');
+
+            // Reset enter code field
+            enterCodeCode.value = '';
         } else {
             mowin.setText(resp.error);
             mowin.toggle();
