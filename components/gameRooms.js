@@ -23,7 +23,7 @@ GameRooms.prototype.destroy = function(roomName) {
 module.exports = new GameRooms();
 
 function Game(owner) {
-    // TODO
+    this.locked = false;
     this.owner = owner;
     this.people = [];
 };
@@ -54,4 +54,13 @@ Game.prototype.inList = function(id) {
 // Check if client is game owner
 Game.prototype.isOwner = function(id) {
     return this.owner == id;
+};
+
+// Lock game
+Game.prototype.lock = function() {
+    this.locked = true;
+};
+
+Game.prototype.unlock = function() {
+    this.locked = false;
 };

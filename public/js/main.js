@@ -44,6 +44,9 @@ window.onload = function() {
     connectingReadyBtn.onclick = function(e) {
         e.preventDefault();
         gameState.switchto('waiting-for-cars');
+
+        // Emit to app.js
+        socket.emit('waitingForCars');
     }
 
     socket.on('connectedPeople', function(numb) {

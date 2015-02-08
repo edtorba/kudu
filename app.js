@@ -21,8 +21,10 @@ io.on('connection', function(socket) {
 
         // Check if client was part of the group
         if (typeof socket.roomCode !== 'undefined') {
+
             // Check if client was a room owner
             if (gameRooms.list[socket.roomCode].owner == socket.id) {
+
                 // Leave room
                 socket.leave(socket.roomCode);
 
@@ -108,6 +110,32 @@ io.on('connection', function(socket) {
                 'status': false,
                 'error': 'Wrong room code'
             });
+        }
+    });
+
+    // Lock room and allow clients to select vehicle
+    socket.on('waitingForCars', function() {
+
+        // Check if client was part of the group
+        if (typeof socket.roomCode !== 'undefined') {
+
+            // Check if room exists
+            if (gameRooms.exists(socket.roomCode)) {
+
+                // Check if client was a room owner
+                if (gameRooms.list[socket.roomCode].owner == socket.id) {
+
+                    // Lock room
+                    gameRooms.list[socket.roomCode].lock();
+
+                    // Move clients to select vehicle state
+                    // Client was a room owner, now we have to kick evryone else
+                    io.to(socket.roomCode).emit('switchToSelectVehicle', {
+                        'status': true,
+                        'error': null
+                    });
+                }
+            }
         }
     });
 });

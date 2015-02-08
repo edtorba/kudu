@@ -62,4 +62,13 @@ window.onload = function() {
             mowin.toggle();
         }
     });
+
+    /**
+     * Select vehicle
+     */
+    socket.on('switchToSelectVehicle', function(resp) {
+        if (resp.status) {
+            gameState.switchto('select-vehicle');
+        }
+    });
 };
