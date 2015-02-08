@@ -1,10 +1,12 @@
 'use strict';
 
-function GameState() {
+function GameState(className) {
     this.sections = {};
 
     this.active = 'state--active';
     this.inactive = 'state--inactive';
+
+    this.init(className);
 };
 
 // Retrieve all sections and push them to sections list

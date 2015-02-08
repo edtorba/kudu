@@ -22,32 +22,35 @@ io.on('connection', function(socket) {
         // Check if client was part of the group
         if (typeof socket.roomCode !== 'undefined') {
 
-            // Check if client was a room owner
-            if (gameRooms.list[socket.roomCode].owner == socket.id) {
+            // Check if room exists
+            if (gameRooms.exists(roomCode)) {
+                // Check if client was a room owner
+                if (gameRooms.list[socket.roomCode].owner == socket.id) {
 
-                // Leave room
-                socket.leave(socket.roomCode);
+                    // Leave room
+                    socket.leave(socket.roomCode);
 
-                // Destroy game
-                gameRooms.destroy(socket.roomCode);
+                    // Destroy game
+                    gameRooms.destroy(socket.roomCode);
 
-                // Client was a room owner, now we have to kick evryone else
-                io.to(socket.roomCode).emit('ownerLeft', {
-                    'status': null,
-                    'error': 'Room owner has left the game. The game connection has been lost.'
-                });
-            } else if (gameRooms.list[socket.roomCode].inList(socket.id)) {
-                // Client was a player within a room X, so we have to remove him
-                gameRooms.list[socket.roomCode].killClient(socket.id);
+                    // Client was a room owner, now we have to kick evryone else
+                    io.to(socket.roomCode).emit('ownerLeft', {
+                        'status': null,
+                        'error': 'Room owner has left the game. The game connection has been lost.'
+                    });
+                } else if (gameRooms.list[socket.roomCode].inList(socket.id)) {
+                    // Client was a player within a room X, so we have to remove him
+                    gameRooms.list[socket.roomCode].killClient(socket.id);
 
-                // Leave room
-                socket.leave(socket.roomCode);
+                    // Leave room
+                    socket.leave(socket.roomCode);
 
-                // Sending number of connected people to owner
-                socket.broadcast.to(gameRooms.list[socket.roomCode].owner).emit(
-                    'connectedPeople',
-                    gameRooms.list[socket.roomCode].people.length
-                );
+                    // Sending number of connected people to owner
+                    socket.broadcast.to(gameRooms.list[socket.roomCode].owner).emit(
+                        'connectedPeople',
+                        gameRooms.list[socket.roomCode].people.length
+                    );
+                }
             }
         }
     });
@@ -75,33 +78,44 @@ io.on('connection', function(socket) {
         // Check if room exists
         if (gameRooms.exists(roomCode)) {
 
-            // Check if client is already in room
-            if (!gameRooms.list[roomCode].inList(socket.id)) {
-                // Attach room code to a socket
-                socket.roomCode = roomCode;
+            // Check if room is locked
+            if (!gameRooms.list[roomCode].locked) {
 
-                // Join room
-                socket.join(roomCode);
+                // Check if client is already in room
+                if (!gameRooms.list[roomCode].inList(socket.id)) {
+                    // Attach room code to a socket
+                    socket.roomCode = roomCode;
 
-                // Add client to list
-                gameRooms.list[roomCode].addClient(socket.id);
+                    // Join room
+                    socket.join(roomCode);
 
-                // Send to current request socket client response message
-                socket.emit('joinRoomStatus', {
-                    'status': true,
-                    'error': null
-                });
+                    // Add client to list
+                    gameRooms.list[roomCode].addClient(socket.id);
 
-                // Sending number of connected people to owner
-                socket.broadcast.to(gameRooms.list[roomCode].owner).emit(
-                    'connectedPeople',
-                    gameRooms.list[roomCode].people.length
-                );
+                    // Send to current request socket client response message
+                    socket.emit('joinRoomStatus', {
+                        'status': true,
+                        'error': null
+                    });
+
+                    // Sending number of connected people to owner
+                    socket.broadcast.to(gameRooms.list[roomCode].owner).emit(
+                        'connectedPeople',
+                        gameRooms.list[roomCode].people.length
+                    );
+                } else {
+                    // Send to current request socket client response message
+                    socket.emit('joinRoomStatus', {
+                        'status': false,
+                        'error': 'Client is already part of that group'
+                    });
+                }
             } else {
+                // Locked
                 // Send to current request socket client response message
                 socket.emit('joinRoomStatus', {
                     'status': false,
-                    'error': 'Client is already part of that group'
+                    'error': 'Too late, sorry, room is locked.'
                 });
             }
         } else {

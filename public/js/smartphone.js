@@ -1,8 +1,7 @@
 window.onload = function() {
     'use strict';
 
-    var gameState = new GameState();
-    gameState.init('.js--state');
+    var gameState = new GameState('.js--state');
     gameState.switchto('enter-code');
 
     var mowin = new Mowin();
