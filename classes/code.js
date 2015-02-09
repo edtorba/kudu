@@ -2,9 +2,7 @@ module.exports = {
     // Generates random alpha-numeric-string
     // http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
     // Example usage:
-    // console.log(randomString(16, 'aA'));
-    // console.log(randomString(32, '#aA'));
-    // console.log(randomString(64, '#A!'));
+    // randomString(5, '#aA')
     generate: function(length, chars) {
         var mask = '';
 
