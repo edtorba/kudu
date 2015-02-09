@@ -1,26 +1,9 @@
 'use strict';
+var Player = require('./player');
 
-function GameRooms() {
-    this.list = {};
-};
-
-GameRooms.prototype.create = function(roomName, owner) {
-    this.list[roomName] = new Game(owner);
-};
-
-GameRooms.prototype.exists = function(roomName) {
-    return this.list.hasOwnProperty(roomName);
-};
-
-GameRooms.prototype.destroy = function(roomName) {
-    if (this.exists(roomName)) {
-        delete this.list[roomName];
-    } else {
-        console.log('Cannot destroy room `' + roomName + '` as it does not exist');
-    }
-};
-
-module.exports = new GameRooms();
+/**
+ * Game Class
+ */
 
 function Game(owner) {
     this.locked = false;
@@ -64,3 +47,5 @@ Game.prototype.lock = function() {
 Game.prototype.unlock = function() {
     this.locked = false;
 };
+
+module.exports = Game;
