@@ -42,13 +42,21 @@ window.onload = function() {
 
     connectingReadyBtn.onclick = function(e) {
         e.preventDefault();
-        gameState.switchto('waiting-for-cars');
 
         // Emit to app.js
-        socket.emit('waitingForCars');
+        socket.emit('readyToStart');
     }
 
     socket.on('connectedPeople', function(numb) {
         connectingConnectingPlayers.innerHTML = numb;
+    });
+
+    socket.on('switchToSelectVehicle', function(resp) {
+        if (resp.status) {
+            gameState.switchto('waiting-for-cars');
+        } else {
+            mowin.setText(resp.error);
+            mowin.toggle();
+        }
     });
 };

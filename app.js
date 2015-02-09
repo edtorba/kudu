@@ -129,7 +129,7 @@ io.on('connection', function(socket) {
     });
 
     // Lock room and allow clients to select vehicle
-    socket.on('waitingForCars', function() {
+    socket.on('readyToStart', function() {
 
         // Check if client was part of the group
         if (typeof socket.roomCode !== 'undefined') {
@@ -140,15 +140,23 @@ io.on('connection', function(socket) {
                 // Check if client was a room owner
                 if (rooms.list[socket.roomCode].owner == socket.id) {
 
-                    // Lock room
-                    rooms.list[socket.roomCode].lock();
+                    // Check if there is more than two people in the room
+                    if (rooms.list[socket.roomCode].people.length > 1) {
+                        // Lock room
+                        rooms.list[socket.roomCode].lock();
 
-                    // Move clients to select vehicle state
-                    // Client was a room owner, now we have to kick evryone else
-                    io.to(socket.roomCode).emit('switchToSelectVehicle', {
-                        'status': true,
-                        'error': null
-                    });
+                        // Move clients to select vehicle state
+                        io.to(socket.roomCode).emit('switchToSelectVehicle', {
+                            'status': true,
+                            'error': null
+                        });
+                    } else {
+                        // Cannot allow to move to next state, tell what's wrong
+                        io.to(socket.roomCode).emit('switchToSelectVehicle', {
+                            'status': false,
+                            'error': 'To start the game you need at least two players'
+                        });
+                    }
                 }
             }
         }
