@@ -23,7 +23,7 @@ io.on('connection', function(socket) {
         if (typeof socket.roomCode !== 'undefined') {
 
             // Check if room exists
-            if (gameRooms.exists(roomCode)) {
+            if (gameRooms.exists(socket.roomCode)) {
                 // Check if client was a room owner
                 if (gameRooms.list[socket.roomCode].owner == socket.id) {
 
