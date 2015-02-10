@@ -25,8 +25,9 @@ io.on('connection', function(socket) {
 
             // Check if room exists
             if (rooms.exists(socket.roomCode)) {
+
                 // Check if client was a room owner
-                if (rooms.list[socket.roomCode].owner == socket.id) {
+                if (rooms.list[socket.roomCode].isOwner(socket.id)) {
 
                     // Leave room
                     socket.leave(socket.roomCode);
@@ -39,9 +40,9 @@ io.on('connection', function(socket) {
                         'status': null,
                         'error': 'Room owner has left the game. The game connection has been lost.'
                     });
-                } else if (rooms.list[socket.roomCode].inList(socket.id)) {
+                } else if (rooms.list[socket.roomCode].isIn(socket.id)) {
                     // Client was a player within a room X, so we have to remove him
-                    rooms.list[socket.roomCode].killClient(socket.id);
+                    rooms.list[socket.roomCode].leave(socket.id);
 
                     // Leave room
                     socket.leave(socket.roomCode);
@@ -49,7 +50,7 @@ io.on('connection', function(socket) {
                     // Sending number of connected people to owner
                     socket.broadcast.to(rooms.list[socket.roomCode].owner).emit(
                         'connectedPeople',
-                        rooms.list[socket.roomCode].people.length
+                        rooms.list[socket.roomCode].numberOfPlayers()
                     );
                 }
             }
@@ -83,7 +84,8 @@ io.on('connection', function(socket) {
             if (!rooms.list[roomCode].locked) {
 
                 // Check if client is already in room
-                if (!rooms.list[roomCode].inList(socket.id)) {
+                if (!rooms.list[roomCode].isIn(socket.id)) {
+
                     // Attach room code to a socket
                     socket.roomCode = roomCode;
 
@@ -91,7 +93,7 @@ io.on('connection', function(socket) {
                     socket.join(roomCode);
 
                     // Add client to list
-                    rooms.list[roomCode].addClient(socket.id);
+                    rooms.list[roomCode].join(socket.id);
 
                     // Send to current request socket client response message
                     socket.emit('joinRoomStatus', {
@@ -102,7 +104,7 @@ io.on('connection', function(socket) {
                     // Sending number of connected people to owner
                     socket.broadcast.to(rooms.list[roomCode].owner).emit(
                         'connectedPeople',
-                        rooms.list[roomCode].people.length
+                        rooms.list[roomCode].numberOfPlayers()
                     );
                 } else {
                     // Send to current request socket client response message
@@ -138,10 +140,11 @@ io.on('connection', function(socket) {
             if (rooms.exists(socket.roomCode)) {
 
                 // Check if client was a room owner
-                if (rooms.list[socket.roomCode].owner == socket.id) {
+                if (rooms.list[socket.roomCode].isOwner(socket.id)) {
 
                     // Check if there is more than two people in the room
-                    if (rooms.list[socket.roomCode].people.length > 1) {
+                    if (rooms.list[socket.roomCode].numberOfPlayers() > 1) {
+
                         // Lock room
                         rooms.list[socket.roomCode].lock();
 

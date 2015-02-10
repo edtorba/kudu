@@ -8,31 +8,34 @@ var Player = require('./player');
 function Game(owner) {
     this.locked = false;
     this.owner = owner;
-    this.people = [];
+    this.players = {};
 };
 
-// Add client to people list
-Game.prototype.addClient = function(id) {
-    this.people.push(id);
+// Add player to players list
+Game.prototype.join = function(id) {
+    this.players[id] = new Player();
+};
+
+// Check if player is in list
+Game.prototype.isIn = function(id) {
+    return this.players.hasOwnProperty(id);
 };
 
 // Kill client from people list
-Game.prototype.killClient = function(id) {
-    // Find client's position
-    var position = this.people.indexOf(id);
-    if (position > -1) {
-        // Execute client
-        this.people.splice(position, 1);
+Game.prototype.leave = function(id) {
+
+    // Check if player exists
+    if (this.isIn(id)) {
+        delete this.players[id];
     } else {
-        // Don't move a muscle
-        console.log('Counldn\'t execute client: ' + id);
+        console.log('Cannot remove player `' + id + '` as he is not in the list');
     }
 };
 
-// Check if client is in people list
-Game.prototype.inList = function(id) {
-    return this.people.indexOf(id) != -1 ? true : false;
-};
+// Number of players in game
+Game.prototype.numberOfPlayers = function() {
+    return Object.keys(this.players).length;
+}
 
 // Check if client is game owner
 Game.prototype.isOwner = function(id) {
@@ -44,6 +47,7 @@ Game.prototype.lock = function() {
     this.locked = true;
 };
 
+// Unlock game
 Game.prototype.unlock = function() {
     this.locked = false;
 };
