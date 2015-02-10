@@ -5,6 +5,10 @@ var io      = require('socket.io')(http);
 var code    = require('./classes/code');
 var Rooms   = require('./classes/rooms');
 var rooms   = new Rooms();
+var Cars    = require('./classes/cars');
+var cars    = new Cars();
+// Initialise cars
+cars.init();
 
 // Make "public" folder publicly accessible
 app.use(express.static(__dirname + '/public'));
@@ -151,7 +155,8 @@ io.on('connection', function(socket) {
                         // Move clients to select vehicle state
                         io.to(socket.roomCode).emit('switchToSelectVehicle', {
                             'status': true,
-                            'error': null
+                            'error': null,
+                            'cars': cars.list
                         });
                     } else {
                         // Cannot allow to move to next state, tell what's wrong
