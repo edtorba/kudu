@@ -19,7 +19,7 @@ window.onload = function() {
         gameState.switchto('enter-code');
         yell.setText(resp.error);
         yell.negative();
-        yell.toggle();
+        yell.show();
         // TODO : reset game
     });
 
@@ -30,7 +30,7 @@ window.onload = function() {
         gameState.switchto('enter-code');
         yell.setText('The game connection has been lost.');
         yell.negative();
-        yell.toggle();
+        yell.show();
         // TODO : reset game
     });
 
@@ -51,7 +51,7 @@ window.onload = function() {
         } else {
             yell.setText('Bad code');
             yell.negative();
-            yell.toggle();
+            yell.show();
         }
     };
 
@@ -65,7 +65,7 @@ window.onload = function() {
         } else {
             yell.setText(resp.error);
             yell.negative();
-            yell.toggle();
+            yell.show();
         }
     });
 

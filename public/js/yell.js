@@ -5,7 +5,8 @@ function Yell() {
     this.container = document.querySelector('.js--yell__container');
     this.classNames = {
         'positive': 'yell--positive',
-        'negative': 'yell--negative'
+        'negative': 'yell--negative',
+        'visible':  'yell--visible'
     };
     this.clickListener();
 };
@@ -21,7 +22,19 @@ Yell.prototype.clickListener = function() {
 };
 
 Yell.prototype.toggle = function() {
-    toggleClass(this.yell, 'yell--visible');
+    toggleClass(this.yell, this.classNames.visible);
+};
+
+Yell.prototype.hide = function() {
+    if (!hasClass(this.yell, this.classNames.visible)) {
+        removeClass(this.yell, this.classNames.visible);
+    }
+};
+
+Yell.prototype.show = function() {
+    if (!hasClass(this.yell, this.classNames.visible)) {
+        addClass(this.yell, this.classNames.visible);
+    }
 };
 
 Yell.prototype.setText = function(text) {
@@ -38,7 +51,7 @@ Yell.prototype.positive = function() {
     if (!hasClass(this.container, this.classNames.positive)) {
         addClass(this.container, this.classNames.positive);
     }
-}
+};
 
 Yell.prototype.negative = function() {
     // Removing positive class from container
