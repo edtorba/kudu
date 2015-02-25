@@ -32,7 +32,7 @@ $global-border-box: true !default;
 
 
 
- /*------------------------------------*\
+/*------------------------------------*\
     $MOBILE-FIRST
 \*------------------------------------*/
 $mobile-first: true !default;
@@ -42,53 +42,101 @@ $mobile-first: true !default;
 
 
 /*------------------------------------*\
-    $BASE
+    $COLOUR-PALETTE
 \*------------------------------------*/
-/**
- * Base width in pixels aka max-width for wrapper.
- */
-$base-width: 1280px !default;
-
-/**
- * Base font-family.
- */
-$base-font-family: 'Varela Round', sans-serif !default;
-
-/**
- * Base stuff.
- */
-$base-font-size:   20px !default;
-$base-line-height: 28px !default;
-
-/**
- * Base radius
- */
-$base-radius: 4px !default;
+$base-color--primary:    #2e3845; // Light dark blue
+$base-color--secondary:  #ededf1; // Grey
+$base-color--tertiary:   #26303b; // Dark Blue
+$base-color--quaternary: #fcb116; // Yellow
+$base-color--quinary:    #78879f; // Light blue
+$base-color--senary:     #ffffff; // White
 
 
 
 
 
 /*------------------------------------*\
-    $COLOURS
+    $BASE-SETTINGS
 \*------------------------------------*/
 /**
- * Base background colours.
+ * Dimension related settings
  */
-$base-background-color: #fff !default;
-$base-background-color--ascent: #ededf1 !default;
+$base-width: 1280px !default; // Wrapper's max width
+$base-radius: 4px !default;
+$base-border-size: 3px !default;
+
 
 /**
- * Base font colours.
+ * Animation related settings
  */
-$base-font-color: #78879f !default;
-$base-font-color--ascent: #2e3845 !default;
+$base-transition: all ease-in-out;
+$base-transition-time: 0.2s;
+$secondary-transition-time: 0.6s;
+
 
 /**
- * Default colour for objects’, borders etc.
+ * Text related settings
  */
-$base-ui-color: #fcb116 !default;
-$base-ui-color--ascent: #26303b !default;
+$base-font-family: 'Varela Round', sans-serif !default;
+$base-font-size: 20px !default;
+$base-line-height: 28px !default;
+
+
+
+
+
+/*------------------------------------*\
+    $BASE-COLOURS
+\*------------------------------------*/
+$base-text-color--primary: $base-color--quinary;
+$base-text-color--secondary: $base-color--senary;
+
+
+$base-background-color--primary: $base-color--primary;
+$base-background-color--secondary: $base-color--tertiary;
+
+
+$base-link-color--primary: $base-color--quaternary;
+$base-link-color--secondary: $base-color--quinary;
+
+
+$base-heading-color--primary: $base-color--senary;
+
+
+
+
+
+/*------------------------------------*\
+    $OBJECTS-COLOURS
+\*------------------------------------*/
+$object-logo-text-color: $base-color--senary;
+
+
+$object-spinner-color: $base-color--secondary;
+
+
+$object-button-text-color--primary: $base-color--primary;
+$object-button-text-color--secondary: $base-color--primary;
+$object-button-background-color--primary: $base-color--quaternary;
+$object-button-background-color--secondary: $base-color--quinary;
+
+
+$object-input-background-color: $base-background-color--primary;
+$object-input-border-color: $base-color--quinary;
+$object-input-text-color: $base-color--senary;
+
+
+
+
+
+/*------------------------------------*\
+    $COMPONENTS-COLOURS
+\*------------------------------------*/
+$component-yell-background-color--primary: $base-color--quinary;
+$component-yell-background-color--secondary: #ff5959; // Red
+$component-yell-background-color--tertiary: #abd036; // Green
+$component-yell-text-color: $base-color--senary;
+
 
 
 

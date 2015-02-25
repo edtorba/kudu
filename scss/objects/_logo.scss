@@ -1,0 +1,12 @@
+/*------------------------------------*\
+    $LOGO
+\*------------------------------------*/
+.logo {
+    display: inline-block;
+    position: absolute;
+    top: $gutter;
+    left: $gutter;
+    color: $object-logo-text-color;
+    margin: 0;
+    padding: 0;
+}

@@ -129,7 +129,7 @@ io.on('connection', function(socket) {
             // Send to current request socket client response message
             socket.emit('joinRoomStatus', {
                 'status': false,
-                'error': 'Wrong room code'
+                'error': 'Bad code'
             });
         }
     });

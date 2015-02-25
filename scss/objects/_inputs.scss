@@ -8,16 +8,16 @@
     display: inline-block;
     vertical-align: middle;
     font-family: inherit;
-    font-size: 85%;
-    border: 1px solid;
-    border-color: $base-font-color;
+    background-color: $object-input-background-color;
+    border: 0;
+    border-bottom: $base-border-size dashed;
+    border-color: $object-input-border-color;
     margin: 0;
     padding-top: 0;
     padding-bottom: 0;
-    line-height: 2.9;
-    padding-right: 1.5em;
-    padding-left: 1.5em;
-    margin-top: $base-spacing-unit;
+    font-size: $h2-size;
+    color: $object-input-text-color;
+    text-align: center;
     @include vendor(transition, all ease-in-out 0.2s);
 }
 
@@ -31,4 +31,10 @@
     width: 100%;
     padding-right: 0;           /* [1] */
     padding-left: 0;            /* [1] */
+}
+
+.input--small {
+    display: block;
+    width: 30%;
+    margin: 0 auto;
 }

@@ -2,7 +2,7 @@
 /*!
  * Author: Eduards Torba
  * Author URI: http://edtorba.com
- * Version: 0.0.1
+ * Version: 0.0.2
  */
  /*
  *
@@ -20,6 +20,7 @@
  * Headings...............H1-H6 Styles.
  * Images.................`<img... />` styles.
  * Links..................`<a ...>` styles.
+ * Paragraphs.............`<p>` styles.
  *
  *
  * OBJECTS
@@ -29,11 +30,13 @@
  * Inputs.................Input elements.
  * List Block.............Block list elements.
  * Spinner................Spinner element.
+ * Logo...................Logo element.
  *
  *
  * COMPONENTS
- * Mowin..................Modal window.
- * Wrapper................Wrapping and constraining elements.
+ * Button Container.......Bottom buttons container.
+ * Container..............Wrapping and constraining elements. 
+ * Yell...................Yell message.
  * State..................Game status/frame component.
  *
  * 
@@ -42,6 +45,7 @@
  * Push...................Push classes.
  * Clearfix...............
  * Debug..................CSS debug.
+ * Text...................Text helper classes.
  */
 
 
@@ -69,6 +73,7 @@
 @import 'base/headings';
 @import 'base/images';
 @import 'base/links';
+@import 'base/paragraphs';
 
 
 
@@ -84,6 +89,7 @@
 @import 'objects/inputs';
 @import 'objects/list-block';
 @import 'objects/spinner';
+@import 'objects/logo';
 
 
 
@@ -93,8 +99,9 @@
 /**
  * Components
  */
-@import 'components/mowin';
-@import 'components/wrapper';
+@import 'components/button-container';
+@import 'components/container';
+@import 'components/yell';
 @import 'components/state';
 
 
@@ -108,3 +115,4 @@
 @import 'trumps/push';
 @import 'trumps/clearfix';
 @import 'trumps/debug';
+@import 'trumps/text';

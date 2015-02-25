@@ -17,10 +17,10 @@
     padding-top: 0;
     padding-bottom: 0;
     line-height: 3;
-    padding-right: 2.5em;
-    padding-left: 2.5em;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
     margin-top: $base-spacing-unit;
-    @include vendor(transition, all ease-in-out 0.2s);
+    @include vendor(transition, $base-transition $base-transition-time);
 }
 
 .btn {
@@ -47,22 +47,12 @@
  * Button skin modifiers.
  */
 .btn--bright {
-    background-color: $base-ui-color;
-    color: $base-font-color--ascent;
+    background-color: $object-button-background-color--primary;
+    color: $object-button-text-color--primary;
     
     &:hover {
-        background-color: $base-ui-color--ascent;
-        color: $base-font-color;
-    }
-}
-
-.btn--dark {
-    background-color: $base-ui-color;
-    color: $base-font-color--ascent;
-    
-    &:hover {
-        background-color: $base-font-color;
-        color: $base-ui-color--ascent;
+        background-color: $object-button-background-color--secondary;
+        color: $object-button-text-color--secondary;
     }
 }
 
@@ -80,8 +70,8 @@
  * remains uniform.
  */
 .btn--small {
-    padding-right: 0.5em;
-    padding-left: 0.5em;
+    padding-right: 1em;
+    padding-left: 1em;
     line-height: 2;
 }
 

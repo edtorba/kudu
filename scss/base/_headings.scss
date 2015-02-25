@@ -39,7 +39,8 @@ h6, .zeta {
  */
 @include headings(1, 6) {
     font-weight: 600;
-    color: $base-font-color--ascent;
+    color: $base-text-color--secondary;
+    margin-bottom: 0;
 }
 
 
