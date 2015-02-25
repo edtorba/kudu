@@ -1,1 +1,0 @@
-function toggleClass(s,i){if(s.classList)s.classList.toggle(i);else{var l=s.className.split(" "),t=l.indexOf(i);t>=0?l.splice(t,1):l.push(i),s.className=l.join(" ")}}function isEmpty(s){return 0===s.length||!s.trim()}

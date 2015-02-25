@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html>
 <head>
@@ -6,85 +5,144 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <section class="state state--active js--state" data-game="loading">
-        <span class="spinner">spinner</span>
-    </section>
-    <section class="state state--inactive js--state" data-game="main-menu">
-        <div class="wrapper wrapper--big wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Kudu</h1>
-                    <p>Kudu, a new experimental HTML5 canvas game. Requires PC or laptop with couple of smartphones to play the game. Smartphones are used as a controllers by each user. Be aware that game requires at least two players to play the game.</p>
-                    <button type="button" class="btn btn--bright js--main-menu--start">Start</button>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
-    <section class="state state--inactive js--state" data-game="connecting">
-        <div class="wrapper wrapper--big wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Code: <span class="js--connecting--code"></span></h1>
-                    <p>Connected Players: <span class="js--connecting--players">0</span></p>
-                    <button type="button" class="btn btn--bright js--connecting--ready">Ready</button>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
-    <section class="state state--inactive js--state" data-game="waiting-for-cars">
-        <div class="wrapper wrapper--big wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Waiting for other players, please stand by</h1>
-                    <p>Please choose vehicle on your phone, note that you will not be able to switch it later.</p>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
-    <section class="state state--inactive js--state" data-game="choose-map">
-        <div class="wrapper wrapper--big wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Choose map</h1>
-                    <p>TODO</p>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
-    <section class="state state--inactive js--state" data-game="game">
+        <h1 class="logo">Kudu</h1>
+        <span class="spinner">Loading</span>
+    </section><!-- loading -->
 
-    </section><!-- .state -->
-    <section class="state state--inactive js--state" data-game="scoreboard">
-        <div class="wrapper wrapper--big wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Scoreboard</h1>
-                    <p>TODO</p>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
-    <section class="state state--inactive js--state" data-game="waiting-for-upgrades">
-        <div class="wrapper wrapper--big wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Waiting for other players, please stand by</h1>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
 
-    <div class="overlay js--overlay"></div>
-    <div class="mowin mowin--branded js--mowin">
-        <div class="mowin__toolbar">
-            <a class="mowin__toobar-link icon--cancel js--mowin--close" href="#"></a>
-        </div><!-- .mowin__toolbar -->
-        <div class="mowin__container js--mowin--container"></div><!-- .mowin__container -->
-    </div><!-- .mowin -->
+    <section class="state js--state" data-game="main-menu">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <div class="grid">
+                        <div class="grid__item desk--one-half lap--two-thirds">
+                            <p>Kudu, a new experimental HTML5 canvas game. Requires PC or laptop with couple of smartphones to play the game. Smartphones are used as a controllers by each user. Be aware that game requires at least two players to play the game.</p>
+                        </div><!-- .grid__item -->
+                    </div><!-- .grid -->
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--bright js--main-menu--start">Start</button>
+        </div><!-- .button-container -->
+    </section><!-- main-menu -->
 
-    <script src="js/min/static.js"></script>
+
+    <section class="state js--state" data-game="connecting">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <div class="grid">
+                        <div class="grid__item desk--one-half lap--two-thirds">
+                            <h1>Code: <span class="js--connecting--code"></span></h1>
+                            <p>Connected Players: <span class="js--connecting--players">0</span></p>
+                        </div><!-- .grid__item -->
+                    </div><!-- .grid -->
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--bright js--connecting--ready">Ready</button>
+        </div><!-- .button-container -->
+    </section><!-- connecting -->
+
+
+    <section class="state js--state" data-game="waiting-for-cars">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <div class="grid">
+                        <div class="grid__item desk--two-thirds lap--two-thirds">
+                            <h1>Please choose vehicle on your phone</h1>
+                            <p>note that you will not be able to switch it later</p>
+                        </div><!-- .grid__item -->
+                    </div><!-- .grid -->
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+    </section><!-- waiting-for-cars -->
+
+
+    <section class="state js--state" data-game="choose-map">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <div class="grid">
+                        <div class="grid__item desk--one-half lap--two-thirds">
+                            <h1>Choose Map</h1>
+                            <p>TODO</p>
+                        </div><!-- .grid__item -->
+                    </div><!-- .grid -->
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--bright js--choose-map--ready">Ready</button>
+        </div><!-- .button-container -->
+    </section><!-- .choose-map -->
+
+
+    <section class="state js--state" data-game="game">
+        <!-- TODO: canvas -->
+    </section><!-- game -->
+
+
+    <section class="state js--state" data-game="scoreboard">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <div class="grid">
+                        <div class="grid__item desk--one-half lap--two-thirds">
+                            <h1>Scoreboard</h1>
+                            <p>TODO</p>
+                        </div><!-- .grid__item -->
+                    </div><!-- .grid -->
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--bright js--scoreboard--ready">Ready</button>
+        </div><!-- .button-container -->
+    </section><!-- .scoreboard -->
+
+
+    <section class="state js--state" data-game="waiting-for-upgrades">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <div class="grid">
+                        <div class="grid__item desk--one-half lap--two-thirds">
+                            <h1>Waiting for Upgrades</h1>
+                            <p>TODO</p>
+                        </div><!-- .grid__item -->
+                    </div><!-- .grid -->
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--bright js--waiting-for-upgrades--ready">Ready</button>
+        </div><!-- .button-container -->
+    </section><!-- .waiting-for-upgrades -->
+
+
+    <div class="yell js--yell">
+        <div class="yell__container js--yell__container">
+            yell
+        </div><!-- .yell__container -->
+    </div><!-- .yell -->
+
+
+    <script src="js/min/shared.js"></script>
     <script src="js/min/gamestate.js"></script>
-    <script src="js/mowin.js"></script>
+    <script src="js/yell.js"></script>
     <script src="js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -95,5 +153,6 @@
         stylesheet.type = 'text/css';
         document.head.appendChild(stylesheet);
     </script>
+
 </body>
 </html>

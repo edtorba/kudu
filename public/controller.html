@@ -1,78 +1,71 @@
-
 <!doctype html>
 <html>
 <head>
-    <title>Kudu Controller</title>
+    <title>Kudu</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
 <body>
     <a href="#" class="js--fullscreen fullscreen icon--resize-full">&nbsp;</a>
+
+
     <section class="state state--active js--state" data-game="loading">
-        <span class="spinner">spinner</span>
-    </section>
-    <section class="state state--inactive js--state" data-game="enter-code">
-        <div class="wrapper wrapper--small wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Enter code</h1>
-                    <p>To join, please enter given code</p>
-                    <input type="name" class="js--enter-code--code input" />
-                    <button type="button" class="btn btn--bright js--enter-code--join">Join</button>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
+        <h1 class="logo">Kudu</h1>
+        <span class="spinner">Loading</span>
+    </section><!-- loading -->
 
-    <section class="state state--inactive js--state" data-game="waiting-for-players">
-        <div class="wrapper wrapper--regular wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item desk--one-half lap--two-thirds">
-                    <h1>Waiting for other players, please stand by</h1>
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
 
-    <section class="state state--inactive js--state" data-game="select-vehicle">
-        <div class="wrapper wrapper--small wrapper--centered-contents">
-            <div class="grid">
-                <div class="grid__item portable--one-third">
-                    <div class="car car--a">
-                        <img src="images/car.png" alt="Car" />
-                        <ul class="car__specs list-block">
-                            <li class="car__spec car__spec--name">Red Tiger</li>
-                            <li class="car__spec car__spec--armor">1203</li>
-                            <li class="car__spec car__spec--speed">123</li>
-                            <li class="car__spec car__spec--power">546</li>
-                        </ul><!-- .car__specs -->
-                    </div><!-- .car -->
-                </div><!-- .grid__item --><!--
-             --><div class="grid__item portable--one-third">
-                    <div class="car car--b">
-                        <img src="images/car.png" alt="Car" />
-                    </div><!-- .car -->
-                </div><!-- .grid__item --><!--
-             --><div class="grid__item portable--one-third">
-                    <div class="car car--c">
-                        <img src="images/car.png" alt="Car" />
-                    </div><!-- .car -->
-                </div><!-- .grid__item -->
-            </div><!-- .grid -->
-        </div><!-- .wrapper -->
-    </section><!-- .state -->
+    <section class="state js--state" data-game="enter-code">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <input type="name" class="js--enter-code--code input input--small" maxlength="5" />
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--small btn--bright js--enter-code--join">Join</button>
+        </div><!-- .button-container -->
+    </section><!-- enter-code -->
 
-    <div class="overlay js--overlay"></div>
-    <div class="mowin mowin--branded js--mowin">
-        <div class="mowin__toolbar">
-            <a class="mowin__toobar-link icon--cancel js--mowin--close" href="#"></a>
-        </div><!-- .mowin__toolbar -->
-        <div class="mowin__container js--mowin--container"></div><!-- .mowin__container -->
-    </div><!-- .mowin -->
-    <script src="js/min/static.js"></script>
+
+    <section class="state js--state" data-game="waiting-for-players">
+        <h1 class="logo">Kudu</h1>
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    <h1>Waiting for other players</h1>
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+    </section><!-- waiting-for-players -->
+
+
+    <section class="state js--state" data-game="select-vehicle">
+        <div class="container container--centered">
+            <div class="container__inner">
+                <div class="container text--centered">
+                    Todo
+                </div><!-- .container -->
+            </div><!-- .container__inner -->
+        </div><!-- .container -->
+        <div class="button-container">
+            <button type="button" class="btn btn--small btn--bright js--select-vehicle--ready">Ready</button>
+        </div><!-- .button-container -->
+    </section><!-- select-vehicle -->
+
+
+    <div class="yell js--yell">
+        <div class="yell__container js--yell__container">
+            yell
+        </div><!-- .yell__container -->
+    </div><!-- .yell -->
+
+
+    <script src="js/min/shared.js"></script>
     <script src="js/min/gamestate.js"></script>
-    <script src="js/mowin.js"></script>
-    <script src="js/controller.js"></script>
+    <script src="js/yell.js"></script>
     <script src="js/fullscreen.js"></script>
     <script src="js/smartphone.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -84,5 +77,6 @@
         stylesheet.type = 'text/css';
         document.head.appendChild(stylesheet);
     </script>
+
 </body>
 </html>

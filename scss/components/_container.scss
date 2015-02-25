@@ -1,0 +1,23 @@
+/*------------------------------------*\
+    $CONTAINER
+\*------------------------------------*/
+.container {
+    display: block;
+    max-width: $base-width;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+    .container--centered {
+        display: table;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        max-width: none;
+
+        .container__inner {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }

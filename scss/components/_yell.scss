@@ -1,0 +1,36 @@
+/*------------------------------------*\
+    $YELL
+\*------------------------------------*/
+.yell {
+    display: inline-block;
+    position: absolute;
+    top: -100%;
+    right: $gutter;
+    left: $gutter;
+    margin: 0;
+    text-align: center;
+    @include vendor(transition, $base-transition $secondary-transition-time);
+}
+
+    .yell--visible {
+        top: $gutter;
+    }
+
+    .yell__container {
+        display: inline-block;
+        background-color: $component-yell-background-color--primary;
+        padding: $half-spacing-unit;
+        font-size: $h5-size;
+        color: $component-yell-text-color;
+        cursor: pointer;
+    }
+
+
+    .yell--negative {
+        background-color: $component-yell-background-color--secondary;
+    }
+
+
+    .yell--positive {
+        background-color: $component-yell-background-color--tertiary;
+    }

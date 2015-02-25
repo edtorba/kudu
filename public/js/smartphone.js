@@ -4,7 +4,7 @@ window.onload = function() {
     var gameState = new GameState('.js--state');
     gameState.switchto('enter-code');
 
-    var mowin = new Mowin();
+    var yell = new Yell();
 
     // Controller
     // var controller = new Controller('.js--control-pad', '.js--button-x');
@@ -17,8 +17,9 @@ window.onload = function() {
      */
     socket.on('ownerLeft', function(resp) {
         gameState.switchto('enter-code');
-        mowin.setText(resp.error);
-        mowin.toggle();
+        yell.setText(resp.error);
+        yell.negative();
+        yell.show();
         // TODO : reset game
     });
 
@@ -27,8 +28,9 @@ window.onload = function() {
      */
     socket.on('disconnect', function() {
         gameState.switchto('enter-code');
-        mowin.setText('The game connection has been lost.');
-        mowin.toggle();
+        yell.setText('The game connection has been lost.');
+        yell.negative();
+        yell.show();
         // TODO : reset game
     });
 
@@ -46,6 +48,10 @@ window.onload = function() {
 
             // Emit to app.js
             socket.emit('joinRoom', enterCodeCode.value);
+        } else {
+            yell.setText('Bad code');
+            yell.negative();
+            yell.show();
         }
     };
 
@@ -57,8 +63,9 @@ window.onload = function() {
             // Reset enter code field
             enterCodeCode.value = '';
         } else {
-            mowin.setText(resp.error);
-            mowin.toggle();
+            yell.setText(resp.error);
+            yell.negative();
+            yell.show();
         }
     });
 
@@ -67,6 +74,9 @@ window.onload = function() {
      */
     socket.on('switchToSelectVehicle', function(resp) {
         if (resp.status) {
+            // Create list of cars
+
+            // Switch to select vehicle state
             gameState.switchto('select-vehicle');
         }
     });

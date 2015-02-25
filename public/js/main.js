@@ -4,15 +4,16 @@ window.onload = function() {
     var gameState = new GameState('.js--state');
     gameState.switchto('main-menu');
 
-    var mowin = new Mowin();
+    var yell = new Yell();
 
     /**
      * Disconnect
      */
     socket.on('disconnect', function() {
         gameState.switchto('main-menu');
-        mowin.setText('The game connection has been lost.');
-        mowin.toggle();
+        yell.setText('The game connection has been lost.');
+        yell.negative();
+        yell.show();
         // TODO : reset game
     });
 
@@ -55,8 +56,9 @@ window.onload = function() {
         if (resp.status) {
             gameState.switchto('waiting-for-cars');
         } else {
-            mowin.setText(resp.error);
-            mowin.toggle();
+            yell.setText(resp.error);
+            yell.negative();
+            yell.show();
         }
     });
 };

@@ -6,8 +6,8 @@
  */
 .fullscreen {
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: $gutter;
+    right: $gutter;
     z-index: 999999;
     text-decoration: none;
 }

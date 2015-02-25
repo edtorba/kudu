@@ -2,11 +2,11 @@
     $LINKS
 \*------------------------------------*/
 a {
-    color: $base-ui-color--ascent;
+    color: $base-link-color--primary;
     text-decoration: none;
-    @include vendor(transition, all ease-in-out 0.2s);
+    @include vendor(transition, $base-transition $base-transition-time);
 
     &:hover {
-        color: $base-ui-color;
+        color: $base-link-color--secondary;
     }
 }
