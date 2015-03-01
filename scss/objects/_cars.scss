@@ -1,0 +1,29 @@
+/*------------------------------------*\
+    $CARS
+\*------------------------------------*/
+.car {
+    padding: $gutter * 2;
+}
+
+
+    .car-specs {
+
+    }
+
+        .car-specs__item {
+            font-size: $milli-size;
+            text-align: left;
+        }
+
+        .car-specs__item__name {
+            color: $object-car-name-text-colour;
+            margin-bottom: $half-spacing-unit;
+        }
+
+        .car-specs__item__image {
+            margin-bottom: $half-spacing-unit;
+        }
+
+        .car-specs__item__value {
+            float: right;
+        }

@@ -29,8 +29,10 @@
  * Buttons................Button elements.
  * Inputs.................Input elements.
  * List Block.............Block list elements.
+ * List Inline............Inline list elements.
  * Spinner................Spinner element.
  * Logo...................Logo element.
+ * Cars...................Cars list elements.
  *
  *
  * COMPONENTS
@@ -88,8 +90,10 @@
 @import 'objects/buttons';
 @import 'objects/inputs';
 @import 'objects/list-block';
+@import 'objects/list-inline';
 @import 'objects/spinner';
 @import 'objects/logo';
+@import 'objects/cars';
 
 
 

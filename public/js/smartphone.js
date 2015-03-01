@@ -2,7 +2,7 @@ window.onload = function() {
     'use strict';
 
     var gameState = new GameState('.js--state');
-    gameState.switchto('enter-code');
+    gameState.switchto('select-vehicle');
 
     var yell = new Yell();
 
