@@ -2,7 +2,7 @@ window.onload = function() {
     'use strict';
 
     var gameState = new GameState('.js--state');
-    gameState.switchto('select-vehicle');
+    gameState.switchto('enter-code');
 
     var yell = new Yell();
 
@@ -74,7 +74,23 @@ window.onload = function() {
      */
     socket.on('switchToSelectVehicle', function(resp) {
         if (resp.status) {
+            // TODO: Refactoring
             // Create list of cars
+            var carsList = document.querySelectorAll('.js--select-vehicle');
+            var i = 0;
+            for (var car in resp.cars) {
+                // TODO: car image
+                // Car name
+                carsList[i].querySelector('.js--select-vehicle--name').innerHTML = resp.cars[car].name;
+                // Car armor
+                carsList[i].querySelector('.js--select-vehicle--armor').innerHTML = resp.cars[car].armor;
+                // Car speed
+                carsList[i].querySelector('.js--select-vehicle--speed').innerHTML = resp.cars[car].speed;
+                // Car power
+                carsList[i].querySelector('.js--select-vehicle--power').innerHTML = resp.cars[car].power;
+
+                i++;
+            };
 
             // Switch to select vehicle state
             gameState.switchto('select-vehicle');
