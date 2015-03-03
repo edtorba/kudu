@@ -169,6 +169,39 @@ io.on('connection', function(socket) {
             }
         }
     });
+
+    // Select vehicle
+    socket.on('selectVehicle', function(vehicleName) {
+
+        // Verify if vehicle exists
+        if (cars.exists(vehicleName)) {
+
+            // Check if player has already selected car
+            if (!rooms.list[socket.roomCode].players[socket.id].hasCar()) {
+
+                // Attach vehicle to player
+                rooms.list[socket.roomCode].players[socket.id].setCar(cars.getCarObj(vehicleName));
+
+                // Send a response back to the client say everything is ok
+                socket.emit('selectVehicleStatus', {
+                    'status': true,
+                    'error': null
+                });
+            } else {
+                // Send a response back to the client with an error message
+                socket.emit('selectVehicleStatus', {
+                    'status': false,
+                    'error': 'You have already selected a vehicle'
+                });
+            }
+        } else {
+            // Send a response back to the client with an error message
+            socket.emit('selectVehicleStatus', {
+                'status': false,
+                'error': 'Couldn\'t select vehicle, please try again'
+            });
+        }
+    });
 });
 
 http.listen(3000, function() {

@@ -39,6 +39,12 @@ Cars.prototype.destroy = function(name) {
     }
 };
 
+// Get car object
+Cars.prototype.getCarObj = function(name) {
+    var key = this.toCamelCase(name);
+    return this.list[key];
+};
+
 // Convert space separated string to camel case
 Cars.prototype.toCamelCase = function(sentenceCase) {
     var out = '';

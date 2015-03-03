@@ -72,28 +72,83 @@ window.onload = function() {
     /**
      * Select vehicle
      */
+    var selectVehicleCarList = document.querySelectorAll('.js--select-vehicle');
     socket.on('switchToSelectVehicle', function(resp) {
         if (resp.status) {
             // TODO: Refactoring
             // Create list of cars
-            var carsList = document.querySelectorAll('.js--select-vehicle');
             var i = 0;
             for (var car in resp.cars) {
                 // TODO: car image
                 // Car name
-                carsList[i].querySelector('.js--select-vehicle--name').innerHTML = resp.cars[car].name;
+                selectVehicleCarList[i].dataset.vehicleName = resp.cars[car].name;
+                selectVehicleCarList[i].querySelector('.js--select-vehicle--name').innerHTML = resp.cars[car].name;
                 // Car armor
-                carsList[i].querySelector('.js--select-vehicle--armor').innerHTML = resp.cars[car].armor;
+                selectVehicleCarList[i].querySelector('.js--select-vehicle--armor').innerHTML = resp.cars[car].armor;
                 // Car speed
-                carsList[i].querySelector('.js--select-vehicle--speed').innerHTML = resp.cars[car].speed;
+                selectVehicleCarList[i].querySelector('.js--select-vehicle--speed').innerHTML = resp.cars[car].speed;
                 // Car power
-                carsList[i].querySelector('.js--select-vehicle--power').innerHTML = resp.cars[car].power;
+                selectVehicleCarList[i].querySelector('.js--select-vehicle--power').innerHTML = resp.cars[car].power;
 
                 i++;
             };
 
             // Switch to select vehicle state
             gameState.switchto('select-vehicle');
+        }
+    });
+
+    // Car click listeners
+    eachNode(selectVehicleCarList, function(node) {
+        selectVehicleClickListener(node);
+    });
+
+    function selectVehicleClickListener(ele) {
+
+        ele.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // var that = this;
+
+            // Remove selected class from other cars
+            eachNode(selectVehicleCarList, function(node) {
+                if (node != this) {
+                    removeClass(node, 'js--select-vehicle--selected');
+                }
+            });
+
+            // Check if car is selected
+            if (!hasClass(this, 'js--select-vehicle--selected')) {
+                addClass(this, 'js--select-vehicle--selected');
+            }
+        });
+    };
+
+    // Switch to next state
+    var selectVehicleReadyBtn = document.querySelector('.js--select-vehicle--ready');
+
+    selectVehicleReadyBtn.onclick = function(e) {
+        e.preventDefault;
+
+        var selectedCar = document.querySelector('.js--select-vehicle--selected');
+
+        // Check if user has selected car
+        if (selectedCar) {
+            socket.emit('selectVehicle', selectedCar.dataset.vehicleName);
+        } else {
+            yell.setText('Please select vehicle first');
+            yell.negative();
+            yell.show();
+        }
+    };
+
+    socket.on('selectVehicleStatus', function(resp) {
+        if (resp.status) {
+            // Switch to next state
+        } else {
+            yell.setText(resp.error);
+            yell.negative();
+            yell.show();
         }
     });
 };

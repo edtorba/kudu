@@ -43,3 +43,16 @@ function hasClass(ele, className) {
 function isEmpty(text) {
     return (text.length === 0 || !text.trim());
 };
+
+// Loop through each node list element
+function eachNode(nodeList, callback) {
+    // If IsCallable(callback) is false, throw a TypeError exception.
+    // See: http://es5.github.com/#x9.11
+    if (typeof callback !== 'function') {
+        throw new TypeError(callback + ' is not a function');
+    }
+
+    for (var i = 0; i < nodeList.length; i++) {
+        callback(nodeList[i]);
+    };
+};
