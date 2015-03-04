@@ -2,8 +2,14 @@
     $CARS
 \*------------------------------------*/
 .car {
-    padding: $gutter * 2;
+    padding: $gutter $gutter * 2;
+    margin: $gutter 0;
 }
+
+    
+    .car--selected {
+        background-color: $object-car-selected-background-color;
+    }
 
 
     .car-specs {

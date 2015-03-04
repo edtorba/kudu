@@ -114,12 +114,14 @@ window.onload = function() {
             eachNode(selectVehicleCarList, function(node) {
                 if (node != this) {
                     removeClass(node, 'js--select-vehicle--selected');
+                    removeClass(node, 'car--selected');
                 }
             });
 
             // Check if car is selected
             if (!hasClass(this, 'js--select-vehicle--selected')) {
                 addClass(this, 'js--select-vehicle--selected');
+                addClass(this, 'car--selected');
             }
         });
     };
