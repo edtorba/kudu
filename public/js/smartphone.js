@@ -146,7 +146,8 @@ window.onload = function() {
 
     socket.on('selectVehicleStatus', function(resp) {
         if (resp.status) {
-            // Switch to next state
+            // Switch to select waiting for other players state
+            gameState.switchto('waiting-for-players');
         } else {
             yell.setText(resp.error);
             yell.negative();
