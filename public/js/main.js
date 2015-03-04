@@ -61,4 +61,14 @@ window.onload = function() {
             yell.show();
         }
     });
+
+    /**
+     * Waiting for players to choose vehicle
+     */
+    socket.on('selectVehicleState', function(resp) {
+        if (resp.status) {
+            // Switch to choose map state
+            gameState.switchto('choose-map');
+        }
+    });
 };

@@ -37,6 +37,18 @@ Game.prototype.numberOfPlayers = function() {
     return Object.keys(this.players).length;
 }
 
+// Verify that everyone has selected car
+Game.prototype.everyoneHasCar = function() {
+    var numberOfPlayersWithCar = 0;
+
+    // Check every player
+    for (var player in this.players) {
+        this.players[player].hasCar() ? numberOfPlayersWithCar++ : null;
+    };
+
+    return this.numberOfPlayers() === numberOfPlayersWithCar;
+};
+
 // Check if client is game owner
 Game.prototype.isOwner = function(id) {
     return this.owner == id;

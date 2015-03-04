@@ -108,8 +108,6 @@ window.onload = function() {
         ele.addEventListener('click', function(e) {
             e.preventDefault();
 
-            // var that = this;
-
             // Remove selected class from other cars
             eachNode(selectVehicleCarList, function(node) {
                 if (node != this) {
@@ -147,7 +145,7 @@ window.onload = function() {
     socket.on('selectVehicleStatus', function(resp) {
         if (resp.status) {
             // Switch to select waiting for other players state
-            gameState.switchto('waiting-for-players');
+            gameState.switchto('waiting-for-map');
         } else {
             yell.setText(resp.error);
             yell.negative();
