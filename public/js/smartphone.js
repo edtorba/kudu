@@ -2,12 +2,9 @@ window.onload = function() {
     'use strict';
 
     var gameState = new GameState('.js--state');
-    gameState.switchto('enter-code');
+    gameState.switchto('controller');
 
     var yell = new Yell();
-
-    // Controller
-    // var controller = new Controller('.js--control-pad', '.js--button-x');
 
     // Fullscreen
     var fullscreen = new Fullscreen('.js--fullscreen');
