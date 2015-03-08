@@ -52,6 +52,9 @@ Controller.prototype.positionHandler = function(e, that) {
     }
 };
 
+/**
+ * Main loop that draws our stuff
+ */
 Controller.prototype.loop = function() {
     var that = this;
 
@@ -63,15 +66,72 @@ Controller.prototype.loop = function() {
         this.canvas.height = window.innerHeight;
     }
 
-    // Draw circle
+    // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Circular touch pad
+    var touchpad = {
+        'radius': 75,
+        'gutter': 24,
+        x: function() { return this.radius + this.gutter;},
+        y: function() { return window.innerHeight - this.radius - this.gutter;}
+    };
+
+    // Now draw it...
     this.context.strokeStyle = '#eee';
     this.context.lineWidth = '10';
 
+    this.context.beginPath();
+
+    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    this.context.arc(
+            touchpad.x(),
+            touchpad.y(),
+            touchpad.radius,
+            0,
+            Math.PI * 2,
+            true
+        );
+    this.context.stroke();
+
+    // Pointer
     eachNode(this.points, function(node) {
+        var finger = {
+            'radius': 50,
+            'gutter': 0
+        };
+
         that.context.beginPath();
-        that.context.arc(node.clientX, node.clientY, 50, 0, Math.PI * 2, true);
-        that.context.stroke();
+        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+        that.context.arc(
+                node.clientX,
+                node.clientY,
+                finger.radius,
+                0,
+                Math.PI * 2,
+                true
+            );
+        that.context.fill();
+
+        /**
+         * Check if touch happened inside a circle.
+         *
+         * Formula:
+         * C - circle
+         * T - touch
+         * (xT − xC)^2 + (yT − yC)^2 < r^2
+         *
+         * My maths teacher would be proud of me :P
+         */
+        var radius = Math.pow(touchpad.radius, 2);
+
+        var pythagorean = Math.pow((touchpad.x() - node.clientX), 2) + Math.pow((touchpad.y() - node.clientY), 2);
+
+        // if (pythagorean < radius) {
+        //     console.log('in');
+        // } else {
+        //     console.log('out');
+        // }
     });
 };
 
