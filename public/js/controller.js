@@ -10,6 +10,11 @@ window.requestAnimFrame = window.requestAnimationFrame ||
 function Controller() {
     this.container = document.querySelector('.js--controller');
     this.points = [];
+    this.velocity = {
+        'x': 0,
+        'y': 0,
+        'acceleration': 0
+    };
     var that = this;
 
     // Canvas
@@ -73,8 +78,8 @@ Controller.prototype.loop = function() {
     var touchpad = {
         'radius': 75,
         'gutter': 24,
-        x: function() { return this.radius + this.gutter;},
-        y: function() { return window.innerHeight - this.radius - this.gutter;}
+        'x': function() { return this.radius + this.gutter;},
+        'y': function() { return window.innerHeight - this.radius - this.gutter;}
     };
 
     // Now draw it...
@@ -94,25 +99,15 @@ Controller.prototype.loop = function() {
         );
     this.context.stroke();
 
+    // Inner circle initial coordinates
+    var finger = {
+        'radius': 35,
+        'x': touchpad.x(),
+        'y': touchpad.y()
+    };
+
     // Pointer
     eachNode(this.points, function(node) {
-        var finger = {
-            'radius': 50,
-            'gutter': 0
-        };
-
-        that.context.beginPath();
-        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-        that.context.arc(
-                node.clientX,
-                node.clientY,
-                finger.radius,
-                0,
-                Math.PI * 2,
-                true
-            );
-        that.context.fill();
-
         /**
          * Check if touch happened inside a circle.
          *
@@ -124,15 +119,58 @@ Controller.prototype.loop = function() {
          * My maths teacher would be proud of me :P
          */
         var radius = Math.pow(touchpad.radius, 2);
-
         var pythagorean = Math.pow((touchpad.x() - node.clientX), 2) + Math.pow((touchpad.y() - node.clientY), 2);
 
-        // if (pythagorean < radius) {
-        //     console.log('in');
-        // } else {
-        //     console.log('out');
-        // }
+        if (pythagorean < radius) {
+            /**
+             * Workout in what part of the circle touch event happened
+             * e.g. south, west, north or east
+             * based on that increase or decrease X and Y velocity
+             */
+
+            // X
+            if (touchpad.x() > node.clientX) {
+                // West
+                that.velocity.x = -1;
+            } else if (touchpad.x() < node.clientX) {
+                // East
+                that.velocity.x = 1;
+            }
+
+            // Y
+            if (touchpad.y() > node.clientY) {
+                // North
+                that.velocity.y = 1;
+            } else if (touchpad.y() < node.clientY) {
+                // South
+                that.velocity.y = -1;
+            }
+
+            /**
+             * Workout distance from center to circle's edge
+             * Formula:
+             * acceleration = pythagorean * 100 / radius
+             */
+            that.velocity.acceleration = pythagorean * 100 / radius;
+
+
+            finger.x = node.clientX;
+            finger.y = node.clientY;
+        }
     });
+
+    // Draw inner circle
+    this.context.beginPath();
+    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    this.context.arc(
+            finger.x,
+            finger.y,
+            finger.radius,
+            0,
+            Math.PI * 2,
+            true
+        );
+    this.context.fill();
 };
 
 // Initialise controller
