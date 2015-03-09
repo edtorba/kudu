@@ -8,6 +8,7 @@ window.requestAnimFrame = window.requestAnimationFrame ||
 
 // Controller class
 function Controller() {
+    this.enabled = false;
     this.container = document.querySelector('.js--controller');
     this.points = [];
     this.velocity = {
@@ -29,9 +30,9 @@ function Controller() {
     this.container.appendChild(this.canvas);
 
     // Listeners
-    this.canvas.addEventListener('mousemove', function(e) {
-        that.positionHandler(e, that);
-    }, false);
+    // this.canvas.addEventListener('mousemove', function(e) {
+    //     that.positionHandler(e, that);
+    // }, false);
 
     this.canvas.addEventListener('touchstart', function(e) {
         that.positionHandler(e, that);
@@ -39,6 +40,11 @@ function Controller() {
 
     this.canvas.addEventListener('touchmove', function(e) {
         that.positionHandler(e, that);
+    }, false);
+
+    this.canvas.addEventListener('touchend', function(e) {
+        that.positionHandler(e, that);
+        that.enabled = false;
     }, false);
 };
 
@@ -121,13 +127,13 @@ Controller.prototype.loop = function() {
         var radius = Math.pow(touchpad.radius, 2);
         var pythagorean = Math.pow((touchpad.x() - node.clientX), 2) + Math.pow((touchpad.y() - node.clientY), 2);
 
-        if (pythagorean < radius) {
-            /**
-             * Workout in what part of the circle touch event happened
-             * e.g. south, west, north or east
-             * based on that increase or decrease X and Y velocity
-             */
+        /**
+         * Workout in what part of the circle touch event happened
+         * e.g. south, west, north or east
+         * based on that increase or decrease X and Y velocity
+         */
 
+        if (that.enabled) {
             // X
             if (touchpad.x() > node.clientX) {
                 // West
@@ -145,9 +151,13 @@ Controller.prototype.loop = function() {
                 // South
                 that.velocity.y = -1;
             }
+        }
+
+        if (pythagorean < radius) {
+            that.enabled = true;
 
             /**
-             * Workout distance from center to circle's edge
+             * Workout touch distance to circle's edge
              * Formula:
              * acceleration = pythagorean * 100 / radius
              */
@@ -156,6 +166,26 @@ Controller.prototype.loop = function() {
 
             finger.x = node.clientX;
             finger.y = node.clientY;
+        } else {
+            if (that.enabled) {
+                var x = (touchpad.x() - node.clientX);
+                var y = (touchpad.y() - node.clientY);
+                var pyt = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+                var scale = touchpad.radius / pyt;
+                var xScaled = x * scale;
+                var yScaled = y * scale;
+                finger.x = touchpad.x() - xScaled;
+                finger.y = touchpad.y() - yScaled;
+
+                // Set acceleration to 100
+                that.velocity.acceleration = 100;
+            } else {
+                that.velocity = {
+                    'x': 0,
+                    'y': 0,
+                    'acceleration': 0
+                };
+            }
         }
     });
 
