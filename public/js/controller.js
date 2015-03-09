@@ -30,10 +30,6 @@ function Controller() {
     this.container.appendChild(this.canvas);
 
     // Listeners
-    // this.canvas.addEventListener('mousemove', function(e) {
-    //     that.positionHandler(e, that);
-    // }, false);
-
     this.canvas.addEventListener('touchstart', function(e) {
         that.positionHandler(e, that);
     }, false);
@@ -125,14 +121,15 @@ Controller.prototype.loop = function() {
          * My maths teacher would be proud of me :P
          */
         var radius = Math.pow(touchpad.radius, 2);
-        var pythagorean = Math.pow((touchpad.x() - node.clientX), 2) + Math.pow((touchpad.y() - node.clientY), 2);
+        var xSide = touchpad.x() - node.clientX;
+        var ySide = touchpad.y() - node.clientY;
+        var pythagorean = Math.pow(xSide, 2) + Math.pow(ySide, 2);
 
         /**
          * Workout in what part of the circle touch event happened
          * e.g. south, west, north or east
          * based on that increase or decrease X and Y velocity
          */
-
         if (that.enabled) {
             // X
             if (touchpad.x() > node.clientX) {
@@ -163,17 +160,16 @@ Controller.prototype.loop = function() {
              */
             that.velocity.acceleration = pythagorean * 100 / radius;
 
-
             finger.x = node.clientX;
             finger.y = node.clientY;
         } else {
             if (that.enabled) {
-                var x = (touchpad.x() - node.clientX);
-                var y = (touchpad.y() - node.clientY);
-                var pyt = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-                var scale = touchpad.radius / pyt;
-                var xScaled = x * scale;
-                var yScaled = y * scale;
+                /**
+                 * Put pointer on circle's edge
+                 */
+                var scale = touchpad.radius / Math.sqrt(pythagorean);
+                var xScaled = xSide * scale;
+                var yScaled = ySide * scale;
                 finger.x = touchpad.x() - xScaled;
                 finger.y = touchpad.y() - yScaled;
 
