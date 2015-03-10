@@ -125,31 +125,6 @@ Controller.prototype.loop = function() {
         var ySide = touchpad.y() - node.clientY;
         var pythagorean = Math.pow(xSide, 2) + Math.pow(ySide, 2);
 
-        /**
-         * Workout in what part of the circle touch event happened
-         * e.g. south, west, north or east
-         * based on that increase or decrease X and Y velocity
-         */
-        if (that.enabled) {
-            // X
-            if (touchpad.x() > node.clientX) {
-                // West
-                that.velocity.x = -1;
-            } else if (touchpad.x() < node.clientX) {
-                // East
-                that.velocity.x = 1;
-            }
-
-            // Y
-            if (touchpad.y() > node.clientY) {
-                // North
-                that.velocity.y = 1;
-            } else if (touchpad.y() < node.clientY) {
-                // South
-                that.velocity.y = -1;
-            }
-        }
-
         if (pythagorean < radius) {
             that.enabled = true;
 
@@ -183,10 +158,35 @@ Controller.prototype.loop = function() {
                 };
             }
         }
+
+        /**
+         * Workout in what part of the circle touch event happened
+         * e.g. south, west, north or east
+         * based on that increase or decrease X and Y velocity
+         */
+        if (that.enabled) {
+            // X
+            if (touchpad.x() > node.clientX) {
+                // West
+                that.velocity.x = -1;
+            } else if (touchpad.x() < node.clientX) {
+                // East
+                that.velocity.x = 1;
+            }
+
+            // Y
+            if (touchpad.y() > node.clientY) {
+                // North
+                that.velocity.y = 1;
+            } else if (touchpad.y() < node.clientY) {
+                // South
+                that.velocity.y = -1;
+            }
+        }
     });
 
     // Draw inner circle
-    this.context.fillStyle = '#ffc600';
+    this.context.fillStyle = '#ffffff';
     this.context.beginPath();
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
     this.context.arc(
