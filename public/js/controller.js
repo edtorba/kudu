@@ -9,6 +9,7 @@ window.requestAnimFrame = window.requestAnimationFrame ||
 // Controller class
 function Controller() {
     this.enabled = false;
+    this.touchID = null;
     this.container = document.querySelector('.js--controller');
     this.points = [];
     this.velocity = {
@@ -40,7 +41,11 @@ function Controller() {
 
     this.canvas.addEventListener('touchend', function(e) {
         that.positionHandler(e, that);
-        that.enabled = false;
+
+        if (that.touchID == e.changedTouches[0].identifier) {
+            that.enabled = false;
+            that.touchID = null;
+        }
     }, false);
 };
 
@@ -127,6 +132,7 @@ Controller.prototype.loop = function() {
 
         if (pythagorean < radius) {
             that.enabled = true;
+            that.touchID = node.identifier;
 
             /**
              * Workout touch distance to circle's edge
@@ -138,24 +144,26 @@ Controller.prototype.loop = function() {
             finger.x = node.clientX;
             finger.y = node.clientY;
         } else {
-            if (that.enabled) {
-                /**
-                 * Put pointer on circle's edge
-                 */
-                var scale = touchpad.radius / Math.sqrt(pythagorean);
-                var xScaled = xSide * scale;
-                var yScaled = ySide * scale;
-                finger.x = touchpad.x() - xScaled;
-                finger.y = touchpad.y() - yScaled;
+            if (that.touchID == node.identifier) {
+                if (that.enabled) {
+                    /**
+                     * Put pointer on circle's edge
+                     */
+                    var scale = touchpad.radius / Math.sqrt(pythagorean);
+                    var xScaled = xSide * scale;
+                    var yScaled = ySide * scale;
+                    finger.x = touchpad.x() - xScaled;
+                    finger.y = touchpad.y() - yScaled;
 
-                // Set acceleration to 100
-                that.velocity.acceleration = 100;
-            } else {
-                that.velocity = {
-                    'x': 0,
-                    'y': 0,
-                    'acceleration': 0
-                };
+                    // Set acceleration to 100
+                    that.velocity.acceleration = 100;
+                } else {
+                    that.velocity = {
+                        'x': 0,
+                        'y': 0,
+                        'acceleration': 0
+                    };
+                }
             }
         }
 
@@ -164,23 +172,25 @@ Controller.prototype.loop = function() {
          * e.g. south, west, north or east
          * based on that increase or decrease X and Y velocity
          */
-        if (that.enabled) {
-            // X
-            if (touchpad.x() > node.clientX) {
-                // West
-                that.velocity.x = -1;
-            } else if (touchpad.x() < node.clientX) {
-                // East
-                that.velocity.x = 1;
-            }
+        if (that.touchID == node.indentifier) {
+            if (that.enabled) {
+                // X
+                if (touchpad.x() > node.clientX) {
+                    // West
+                    that.velocity.x = -1;
+                } else if (touchpad.x() < node.clientX) {
+                    // East
+                    that.velocity.x = 1;
+                }
 
-            // Y
-            if (touchpad.y() > node.clientY) {
-                // North
-                that.velocity.y = 1;
-            } else if (touchpad.y() < node.clientY) {
-                // South
-                that.velocity.y = -1;
+                // Y
+                if (touchpad.y() > node.clientY) {
+                    // North
+                    that.velocity.y = 1;
+                } else if (touchpad.y() < node.clientY) {
+                    // South
+                    that.velocity.y = -1;
+                }
             }
         }
     });
