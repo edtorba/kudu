@@ -85,7 +85,7 @@ Controller.prototype.loop = function() {
     };
 
     // Now draw it...
-    this.context.strokeStyle = '#eee';
+    this.context.strokeStyle = '#78879f';
     this.context.lineWidth = '10';
 
     this.context.beginPath();
@@ -186,6 +186,7 @@ Controller.prototype.loop = function() {
     });
 
     // Draw inner circle
+    this.context.fillStyle = '#ffc600';
     this.context.beginPath();
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
     this.context.arc(
@@ -197,6 +198,11 @@ Controller.prototype.loop = function() {
             true
         );
     this.context.fill();
+};
+
+// Returns velocity object
+Controller.prototype.getVelocity = function() {
+    return this.velocity;
 };
 
 // Initialise controller
