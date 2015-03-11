@@ -33,6 +33,23 @@ function Controller() {
         }
     };
 
+    // Burst button
+    this.burst = {
+        'enabled': false,
+        'touchID': null,
+        'gutter': 24,
+        'radius': 75,
+        'position': {
+            'x': function() {
+                return window.innerWidth - _self.burst.radius - _self.burst.gutter;
+            },
+            'y': function() {
+                return window.innerHeight - _self.burst.radius - _self.burst.gutter;
+            }
+        },
+        'color': '#fcb116'
+    };
+
     // Touch related data
     this.touches = [];
 
@@ -156,13 +173,13 @@ Controller.prototype.loop = function() {
         var tempJoystick = {
             'radius': Math.pow(_self.joystick.outerCircle.radius, 2),
             'xSide': function() {
-                return _self.joystick.position.x() - node.clientX
+                return _self.joystick.position.x() - node.clientX;
             },
             'ySide': function() {
-                return _self.joystick.position.y() - node.clientY
+                return _self.joystick.position.y() - node.clientY;
             },
             'pythagorean': function() {
-                return Math.pow(tempJoystick.xSide(), 2) + Math.pow(tempJoystick.ySide(), 2)
+                return Math.pow(tempJoystick.xSide(), 2) + Math.pow(tempJoystick.ySide(), 2);
             }
         };
 
@@ -193,6 +210,26 @@ Controller.prototype.loop = function() {
                     _self.joystick.velocity.acceleration = 100;
                 }
             }
+        }
+
+        /**
+         * Check if touch happened inside burst area.
+         */
+        var tempBurst = {
+            'radius': Math.pow(_self.burst.radius, 2),
+            'xSide': function() {
+                return _self.burst.position.x() - node.clientX;
+            },
+            'ySide': function() {
+                return _self.burst.position.y() - node.clientY;
+            },
+            'pythagorean': function() {
+                return Math.pow(tempBurst.xSide(), 2) + Math.pow(tempBurst.ySide(), 2);
+            }
+        };
+
+        if (tempBurst.pythagorean() < tempBurst.radius) {
+            console.log('Shooting');
         }
 
         /**
@@ -228,6 +265,23 @@ Controller.prototype.loop = function() {
             temporaryJoystickCoordinates.position.x,
             temporaryJoystickCoordinates.position.y,
             _self.joystick.innerCircle.radius,
+            0,
+            Math.PI * 2,
+            true
+        );
+    this.context.fill();
+
+
+    /**
+     * Burst button
+     */
+    this.context.fillStyle = this.burst.color;
+    this.context.beginPath();
+    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    this.context.arc(
+            _self.burst.position.x(),
+            _self.burst.position.y(),
+            _self.burst.radius,
             0,
             Math.PI * 2,
             true
