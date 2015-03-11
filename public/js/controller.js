@@ -1,74 +1,106 @@
 'use strict';
-window.requestAnimFrame = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-        };
 
-// Controller class
 function Controller() {
-    this.enabled = false;
-    this.touchID = null;
-    this.container = document.querySelector('.js--controller');
-    this.points = [];
-    this.velocity = {
-        'x': 0,
-        'y': 0,
-        'acceleration': 0
-    };
-    var that = this;
+    var container = document.querySelector('.js--controller');
+    var _self = this;
 
-    // Canvas
-    this.canvas = document.createElement('canvas');
+    // Joystick related data
+    this.joystick = {
+        'enabled': false,
+        'touchID': null,
+        'velocity': {
+            'x': 0,
+            'y': 0,
+            'acceleration': 0
+        },
+        'gutter': 24,
+        'position': {
+            'x': function() {
+                return _self.joystick.outerCircle.radius + _self.joystick.gutter;
+            },
+            'y': function() {
+                return window.innerHeight - _self.joystick.outerCircle.radius - _self.joystick.gutter;
+            }
+        },
+        'outerCircle': {
+            'radius': 75,
+            'color': '#78879f',
+            'width': '10'
+        },
+        'innerCircle': {
+            'radius': 35,
+            'color': '#ffffff'
+        }
+    };
+
+    // Touch related data
+    this.touches = [];
+
+    // Create canvas element
+    this.canvas = createEle(false, 'canvas');
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
-    // Context
+    // Get context
     this.context = this.canvas.getContext('2d');
 
-    // Adding canvas to container
-    this.container.appendChild(this.canvas);
+    // Insert canvas into DOM tree
+    container.appendChild(this.canvas);
 
-    // Listeners
+    // Touch listeners
     this.canvas.addEventListener('touchstart', function(e) {
-        that.positionHandler(e, that);
+        _self.touchHandler(e, _self);
     }, false);
 
     this.canvas.addEventListener('touchmove', function(e) {
-        that.positionHandler(e, that);
+        _self.touchHandler(e, _self);
     }, false);
 
     this.canvas.addEventListener('touchend', function(e) {
-        that.positionHandler(e, that);
+        _self.touchHandler(e, _self);
 
-        if (that.touchID == e.changedTouches[0].identifier) {
-            that.enabled = false;
-            that.touchID = null;
+        // Joysting related stuff
+        if (_self.joystick.touchID == e.changedTouches[0].identifier) {
+            _self.joystick.enabled = false;
+            _self.joystick.touchID = null;
+
+            // Reset velocity
+            _self.joystick.velocity.x = 0;
+            _self.joystick.velocity.y = 0;
+            _self.joystick.velocity.acceleration = 0;
         }
     }, false);
 };
 
 /**
- * Collects the touch(es) X and Y possitions
+ * Collects data regarding single or multimple touches
+ * such as X, Y coordinates, touch ID, etc.
+ * pushes all data into `touches` object.
  */
-Controller.prototype.positionHandler = function(e, that) {
+Controller.prototype.touchHandler = function(e, _self) {
     if ( (e.clientX) && (e.clientY) ) {
         // Single touch
-        that.points[0] = e;
-    } else if (e.targetTouches) {
+        _self.touches[0] = e;
+    } else {
         // Multiple touches
-        that.points = e.targetTouches;
+        _self.touches = e.targetTouches;
 
         e.preventDefault();
     }
 };
 
 /**
- * Main loop that draws our stuff
+ * Returns joystick velocity
+ */
+Controller.prototype.getJoystickVelocity = function() {
+    return this.joystick.velocity;
+};
+
+/**
+ * Main loop. That's where everything happenes
  */
 Controller.prototype.loop = function() {
-    var that = this;
+    var _self = this;
 
     /**
      *  A hacky way of dealing with device orientation change.
@@ -81,128 +113,121 @@ Controller.prototype.loop = function() {
     // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Circular touch pad
-    var touchpad = {
-        'radius': 75,
-        'gutter': 24,
-        'x': function() { return this.radius + this.gutter;},
-        'y': function() { return window.innerHeight - this.radius - this.gutter;}
-    };
-
-    // Now draw it...
-    this.context.strokeStyle = '#78879f';
-    this.context.lineWidth = '10';
+    /**
+     * Joystick related stuff
+     */
+    // Outer circle
+    this.context.strokeStyle = this.joystick.outerCircle.color;
+    this.context.lineWidth = this.joystick.outerCircle.width;
 
     this.context.beginPath();
-
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
     this.context.arc(
-            touchpad.x(),
-            touchpad.y(),
-            touchpad.radius,
+            _self.joystick.position.x(),
+            _self.joystick.position.y(),
+            _self.joystick.outerCircle.radius,
             0,
             Math.PI * 2,
             true
         );
     this.context.stroke();
 
-    // Inner circle initial coordinates
-    var finger = {
-        'radius': 35,
-        'x': touchpad.x(),
-        'y': touchpad.y()
+    // Inner circle
+    var temporaryJoystickCoordinates = {
+        'position': {
+            'x': _self.joystick.position.x(),
+            'y': _self.joystick.position.y()
+        }
     };
 
-    // Pointer
-    eachNode(this.points, function(node) {
+    // Deal with touches
+    eachNode(this.touches, function(node) {
+
         /**
-         * Check if touch happened inside a circle.
+         * Check if touch happened inside outerCircle area.
          *
          * Formula:
-         * C - circle
-         * T - touch
-         * (xT − xC)^2 + (yT − yC)^2 < r^2
+            C - Circle
+            T - Touch
+            (xT − xC)^2 + (yT − yC)^2 < r^2
          *
          * My maths teacher would be proud of me :P
          */
-        var radius = Math.pow(touchpad.radius, 2);
-        var xSide = touchpad.x() - node.clientX;
-        var ySide = touchpad.y() - node.clientY;
-        var pythagorean = Math.pow(xSide, 2) + Math.pow(ySide, 2);
+        var tempJoystick = {
+            'radius': Math.pow(_self.joystick.outerCircle.radius, 2),
+            'xSide': function() {
+                return _self.joystick.position.x() - node.clientX
+            },
+            'ySide': function() {
+                return _self.joystick.position.y() - node.clientY
+            },
+            'pythagorean': function() {
+                return Math.pow(tempJoystick.xSide(), 2) + Math.pow(tempJoystick.ySide(), 2)
+            }
+        };
 
-        if (pythagorean < radius) {
-            that.enabled = true;
-            that.touchID = node.identifier;
+        if (tempJoystick.pythagorean() < tempJoystick.radius) {
+            _self.joystick.enabled = true;
+            _self.joystick.touchID = node.identifier;
 
-            /**
-             * Workout touch distance to circle's edge
-             * Formula:
-             * acceleration = pythagorean * 100 / radius
-             */
-            that.velocity.acceleration = pythagorean * 100 / radius;
+            // Touch inside outerCircle
+            temporaryJoystickCoordinates.position.x = node.clientX;
+            temporaryJoystickCoordinates.position.y = node.clientY;
 
-            finger.x = node.clientX;
-            finger.y = node.clientY;
+            // Joysticks acceleration
+            _self.joystick.velocity.acceleration = tempJoystick.pythagorean() * 100 / tempJoystick.radius;
         } else {
-            if (that.touchID == node.identifier) {
-                if (that.enabled) {
-                    /**
-                     * Put pointer on circle's edge
-                     */
-                    var scale = touchpad.radius / Math.sqrt(pythagorean);
-                    var xScaled = xSide * scale;
-                    var yScaled = ySide * scale;
-                    finger.x = touchpad.x() - xScaled;
-                    finger.y = touchpad.y() - yScaled;
+            // Touch is outside outerCircle
 
-                    // Set acceleration to 100
-                    that.velocity.acceleration = 100;
-                } else {
-                    that.velocity = {
-                        'x': 0,
-                        'y': 0,
-                        'acceleration': 0
-                    };
+            // Verify that it's the same touch
+            if (_self.joystick.touchID == node.identifier) {
+
+                // Verify that joystick is enabled
+                if (_self.joystick.enabled) {
+                    var scaleRatio = _self.joystick.outerCircle.radius / Math.sqrt(tempJoystick.pythagorean());
+
+                    temporaryJoystickCoordinates.position.x = _self.joystick.position.x() - tempJoystick.xSide() * scaleRatio;
+                    temporaryJoystickCoordinates.position.y = _self.joystick.position.y() - tempJoystick.ySide() * scaleRatio;
+
+                    // Set joystick acceleration to max
+                    _self.joystick.velocity.acceleration = 100;
                 }
             }
         }
 
         /**
-         * Workout in what part of the circle touch event happened
-         * e.g. south, west, north or east
-         * based on that increase or decrease X and Y velocity
+         * Workout joystick innerCircle direction
+         * e.g. south, west, north, east
          */
-        if (that.touchID == node.indentifier) {
-            if (that.enabled) {
-                // X
-                if (touchpad.x() > node.clientX) {
-                    // West
-                    that.velocity.x = -1;
-                } else if (touchpad.x() < node.clientX) {
-                    // East
-                    that.velocity.x = 1;
+        // Verify that it's the right touch
+        if (_self.joystick.touchID == node.identifier) {
+            // Verify that joystick is enabled
+            if (_self.joystick.enabled) {
+                // X coordinates
+                if (_self.joystick.position.x() > node.clientX) {
+                    _self.joystick.velocity.x = -1; // West
+                } else if (_self.joystick.position.x() < node.clientX) {
+                    _self.joystick.velocity.x = 1; // East
                 }
 
-                // Y
-                if (touchpad.y() > node.clientY) {
-                    // North
-                    that.velocity.y = 1;
-                } else if (touchpad.y() < node.clientY) {
-                    // South
-                    that.velocity.y = -1;
+                // Y coordinates
+                if (_self.joystick.position.y() > node.clientY) {
+                    _self.joystick.velocity.y = 1; // North
+                } else if (_self.joystick.position.y() < node.clientY) {
+                    _self.joystick.velocity.y = -1; // South
                 }
             }
         }
     });
 
-    // Draw inner circle
-    this.context.fillStyle = '#ffffff';
+    // Inner circle
+    this.context.fillStyle = this.joystick.innerCircle.color;
     this.context.beginPath();
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
     this.context.arc(
-            finger.x,
-            finger.y,
-            finger.radius,
+            temporaryJoystickCoordinates.position.x,
+            temporaryJoystickCoordinates.position.y,
+            _self.joystick.innerCircle.radius,
             0,
             Math.PI * 2,
             true
@@ -210,18 +235,13 @@ Controller.prototype.loop = function() {
     this.context.fill();
 };
 
-// Returns velocity object
-Controller.prototype.getVelocity = function() {
-    return this.velocity;
-};
-
-// Initialise controller
+// Initialise Controller
 var Controller = new Controller();
 
-// Our looph, here we go...
+// Our animation looph, here we go...
 // place the rAF *before* the loop() to assure as close to
 // 60fps with the setTimeout fallback.
-(function animloop(){
-    requestAnimFrame(animloop);
+(function animLoop() {
+    requestAnimFrame(animLoop);
     Controller.loop();
 })();

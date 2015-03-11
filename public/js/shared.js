@@ -56,3 +56,21 @@ function eachNode(nodeList, callback) {
         callback(nodeList[i]);
     };
 };
+
+// Create DOM element
+function createEle(classes, tag) {
+    var ele = document.createElement(tag || 'div');
+
+    if (classes)
+        ele.className = classes;
+
+    return ele;
+};
+
+// RAF
+window.requestAnimFrame = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+        };
