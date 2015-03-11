@@ -35,8 +35,6 @@ function Controller() {
 
     // Burst button
     this.burst = {
-        'enabled': false,
-        'touchID': null,
         'gutter': 24,
         'radius': 75,
         'position': {
@@ -47,7 +45,8 @@ function Controller() {
                 return window.innerHeight - _self.burst.radius - _self.burst.gutter;
             }
         },
-        'color': '#fcb116'
+        'color': '#fcb116',
+        'activeColor': '#78879f'
     };
 
     // Touch related data
@@ -157,6 +156,11 @@ Controller.prototype.loop = function() {
         }
     };
 
+    // Burst
+    var temporaryBurstColor = {
+        'color': _self.burst.color
+    };
+
     // Deal with touches
     eachNode(this.touches, function(node) {
 
@@ -229,7 +233,7 @@ Controller.prototype.loop = function() {
         };
 
         if (tempBurst.pythagorean() < tempBurst.radius) {
-            console.log('Shooting');
+            temporaryBurstColor.color = _self.burst.activeColor;
         }
 
         /**
@@ -275,7 +279,7 @@ Controller.prototype.loop = function() {
     /**
      * Burst button
      */
-    this.context.fillStyle = this.burst.color;
+    this.context.fillStyle = temporaryBurstColor.color;
     this.context.beginPath();
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
     this.context.arc(
