@@ -65,10 +65,13 @@ window.onload = function() {
     /**
      * Waiting for players to choose vehicle
      */
-    socket.on('selectVehicleState', function(resp) {
+    socket.on('playersReady', function(resp) {
         if (resp.status) {
             // Switch to choose map state
-            gameState.switchto('choose-map');
+            // SKIP (Skipping choose map for now...)
+            gameState.switchto('game');
+
+            // INITIALISE CANVAS
         }
     });
 };

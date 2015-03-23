@@ -191,7 +191,7 @@ io.on('connection', function(socket) {
                 // Check if every player has selected car
                 if (rooms.list[socket.roomCode].everyoneHasCar()) {
                     // Tell room owner to switch to next state
-                    socket.broadcast.to(rooms.list[socket.roomCode].owner).emit( 'selectVehicleState', {
+                    io.to(socket.roomCode).emit( 'playersReady', {
                             'status' : true,
                             'error' : null
                         }

@@ -2,7 +2,7 @@ window.onload = function() {
     'use strict';
 
     var gameState = new GameState('.js--state');
-    gameState.switchto('controller');
+    gameState.switchto('enter-code');
 
     var yell = new Yell();
 
@@ -142,11 +142,19 @@ window.onload = function() {
     socket.on('selectVehicleStatus', function(resp) {
         if (resp.status) {
             // Switch to select waiting for other players state
-            gameState.switchto('waiting-for-map');
+            gameState.switchto('waiting-for-vehicles');
         } else {
             yell.setText(resp.error);
             yell.negative();
             yell.show();
+        }
+    });
+
+    // All players selected vehicles
+    socket.on('playersReady', function(resp) {
+        if (resp.status) {
+            // Switch to controller view
+            gameState.switchto('controller');
         }
     });
 };
