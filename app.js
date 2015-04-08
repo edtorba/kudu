@@ -170,42 +170,62 @@ io.on('connection', function(socket) {
         }
     });
 
-    // Select vehicle
+    /**
+     * Client select vehicle event
+     */
     socket.on('selectVehicle', function(vehicleName) {
 
-        // Verify if vehicle exists
+        /**
+         * Verify if selected vehicle exists
+         */
         if (cars.exists(vehicleName)) {
 
-            // Check if player has already selected car
+            /**
+             * Verify that player hasn't previously selected vehicle
+             * (Tries to crash our game)
+             */
             if (!rooms.list[socket.roomCode].players[socket.id].hasCar()) {
 
-                // Attach vehicle to player
+                /**
+                 * Clone car object into player object
+                 */
                 rooms.list[socket.roomCode].players[socket.id].setCar(cars.getCarObj(vehicleName));
 
-                // Send a response back to the client say everything is ok
+                /**
+                 * Contact client that everything is OK.
+                 */
                 socket.emit('selectVehicleStatus', {
                     'status': true,
                     'error': null
                 });
 
-                // Check if every player has selected car
+                /**
+                 * Check if every player within a room has selected car,
+                 * if true contact game screen and switch to canvas.
+                 */
                 if (rooms.list[socket.roomCode].everyoneHasCar()) {
-                    // Tell room owner to switch to next state
+                    /**
+                     * Switch game screem to canvas state and send players data.
+                     */
                     io.to(socket.roomCode).emit( 'playersReady', {
-                            'status' : true,
-                            'error' : null
-                        }
-                    );
+                        'status': true,
+                        'error': null,
+                        'data': rooms.list[socket.roomCode].players
+                    });
                 }
             } else {
-                // Send a response back to the client with an error message
+                /**
+                 * Client has previously selected vehicle, send him an error msg.
+                 */
                 socket.emit('selectVehicleStatus', {
                     'status': false,
                     'error': 'You have already selected a vehicle'
                 });
             }
         } else {
-            // Send a response back to the client with an error message
+            /**
+             * Selected vehicle does not exists, send an error message to client.
+             */
             socket.emit('selectVehicleStatus', {
                 'status': false,
                 'error': 'Couldn\'t select vehicle, please try again'
