@@ -1,0 +1,1 @@
+"use strict";function Game(){var t=document.querySelector(".js--game-canvas");this.canvas=createEle(!1,"canvas"),this.canvas.width=window.innerWidth,this.canas.height=window.innerHeight,this.context=this.canvas.getContext("2d"),t.appendChild(this.canvas)}Game.prototype.loop=function(){},Game.prototype.drawPlayers=function(){};
