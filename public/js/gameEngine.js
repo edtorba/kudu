@@ -74,10 +74,10 @@ GameEngine.prototype.drawPlayers = function() {
 
     if (_self.data.players) {
         for (var player in _self.data.players) {
-            this.context.fillStyle = '#ffffff';
-            this.context.beginPath();
+            _self.context.fillStyle = '#ffffff';
+            _self.context.beginPath();
             // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-            this.context.arc(
+            _self.context.arc(
                     _self.data.players[player].coordinates.x,
                     _self.data.players[player].coordinates.y,
                     30,
@@ -85,7 +85,7 @@ GameEngine.prototype.drawPlayers = function() {
                     Math.PI * 2,
                     true
                 );
-            this.context.fill();
+            _self.context.fill();
 
             // TODO: Check if player is disqualified and lives
             // console.log(_self.data.players[player]);

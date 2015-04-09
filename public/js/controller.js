@@ -12,7 +12,7 @@ function Controller() {
         'velocity': {
             'x': 0,
             'y': 0,
-            'acceleration': 0
+            'rotation': 0
         },
         'gutter': 24,
         'position': {
@@ -84,7 +84,6 @@ function Controller() {
             // Reset velocity
             _self.joystick.velocity.x = 0;
             _self.joystick.velocity.y = 0;
-            _self.joystick.velocity.acceleration = 0;
         }
     }, false);
 };
@@ -228,9 +227,6 @@ Controller.prototype.drawButtons = function() {
             temporaryJoystickCoordinates.position.x = node.clientX;
             temporaryJoystickCoordinates.position.y = node.clientY;
 
-            // Joysticks acceleration
-            _self.joystick.velocity.acceleration = tempJoystick.pythagorean() * 100 / tempJoystick.radius;
-
             // Post coordinates to server
             _self.postCoords();
         } else {
@@ -245,9 +241,6 @@ Controller.prototype.drawButtons = function() {
 
                     temporaryJoystickCoordinates.position.x = _self.joystick.position.x() - tempJoystick.xSide() * scaleRatio;
                     temporaryJoystickCoordinates.position.y = _self.joystick.position.y() - tempJoystick.ySide() * scaleRatio;
-
-                    // Set joystick acceleration to max
-                    _self.joystick.velocity.acceleration = 100;
 
                     // Post coordinates to server
                     _self.postCoords();
@@ -283,19 +276,56 @@ Controller.prototype.drawButtons = function() {
         if (_self.joystick.touchID == node.identifier) {
             // Verify that joystick is enabled
             if (_self.joystick.enabled) {
-                // X coordinates
+                /**
+                 * X velocity
+                 */
+                // Negative
                 if (_self.joystick.position.x() > node.clientX) {
-                    _self.joystick.velocity.x = -1; // West
+                    if (_self.joystick.position.x() - _self.joystick.outerCircle.radius > node.clientX) {
+                        _self.joystick.velocity.x = -100;
+                    } else {
+                        var width = _self.joystick.position.x() - node.clientX;
+                        _self.joystick.velocity.x = -(width * 100 / _self.joystick.outerCircle.radius);
+                    }
+                // Positive
                 } else if (_self.joystick.position.x() < node.clientX) {
-                    _self.joystick.velocity.x = 1; // East
+                    if (_self.joystick.position.x() + _self.joystick.outerCircle.radius > node.clientX) {
+                        var width =  node.clientX - _self.joystick.position.x();
+                        _self.joystick.velocity.x = width * 100 / _self.joystick.outerCircle.radius;
+                    } else {
+                        _self.joystick.velocity.x = 100;
+                    }
                 }
 
-                // Y coordinates
+                /**
+                 * Y velocity
+                 */
+                // Negative
                 if (_self.joystick.position.y() > node.clientY) {
-                    _self.joystick.velocity.y = -1; // North
+                    if (_self.joystick.position.y() - _self.joystick.outerCircle.radius > node.clientY) {
+                        _self.joystick.velocity.y = -100;
+                    } else {
+                        var height = _self.joystick.position.y() - node.clientY;
+                        _self.joystick.velocity.y = -(height * 100 / _self.joystick.outerCircle.radius);
+                    }
+                // Positive
                 } else if (_self.joystick.position.y() < node.clientY) {
-                    _self.joystick.velocity.y = 1; // South
+                    if (_self.joystick.position.y() + _self.joystick.outerCircle.radius > node.clientY) {
+                        var height = node.clientY - _self.joystick.position.y();
+                        _self.joystick.velocity.y = height * 100 / _self.joystick.outerCircle.radius;
+                    } else {
+                        _self.joystick.velocity.y = 100;
+                    }
                 }
+
+                _self.joystick.velocity.x = _self.joystick.velocity.x / 100;
+                _self.joystick.velocity.y = _self.joystick.velocity.y / 100;
+
+                // Rotation
+                _self.joystick.velocity.rotation = Math.atan2(
+                        _self.joystick.position.y() - node.clientY,
+                        _self.joystick.position.x() - node.clientX
+                    );
             }
         }
     });
