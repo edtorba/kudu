@@ -76,4 +76,13 @@ window.onload = function() {
             gameState.switchto('game');
         }
     });
+
+    /**
+     * Fresh players coordinates
+     */
+    socket.on('userUpdateCoords', function(resp) {
+        if (resp.status) {
+            GameEngine.feedPlayers(resp.players);
+        }
+    });
 };

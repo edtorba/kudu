@@ -232,6 +232,20 @@ io.on('connection', function(socket) {
             });
         }
     });
+
+    /**
+     * User moved joystick, we have to update his coords and notify browser.
+     */
+    socket.on('userUpdateCoords', function(coords) {
+        rooms.list[socket.roomCode].players[socket.id].updateCoords(coords);
+
+        // Sending fresh coordinates
+        io.to(rooms.list[socket.roomCode].owner).emit('userUpdateCoords', {
+            'status': true,
+            'error': null,
+            'players': rooms.list[socket.roomCode].players
+        });
+    });
 });
 
 http.listen(3000, function() {

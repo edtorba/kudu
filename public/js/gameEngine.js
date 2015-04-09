@@ -29,6 +29,9 @@ GameEngine.prototype.loop = function() {
 
     this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
 
+    // Clear screen
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     // Draw players
     _self.drawPlayers();
     // TODO
@@ -71,8 +74,21 @@ GameEngine.prototype.drawPlayers = function() {
 
     if (_self.data.players) {
         for (var player in _self.data.players) {
+            this.context.fillStyle = '#ffffff';
+            this.context.beginPath();
+            // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+            this.context.arc(
+                    _self.data.players[player].coordinates.x,
+                    _self.data.players[player].coordinates.y,
+                    30,
+                    0,
+                    Math.PI * 2,
+                    true
+                );
+            this.context.fill();
+
             // TODO: Check if player is disqualified and lives
-            console.log(_self.data.players[player]);
+            // console.log(_self.data.players[player]);
         };
         // TODO: Draw players
     }

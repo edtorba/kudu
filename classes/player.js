@@ -33,4 +33,9 @@ Player.prototype.setCar = function(carObj) {
     this.car.model = carObj;
 };
 
+Player.prototype.updateCoords = function(coordinates) {
+    this.coordinates.x += (coordinates.x * (coordinates.acceleration) / 100);
+    this.coordinates.y += (coordinates.y * (coordinates.acceleration) / 100);
+};
+
 module.exports = Player;

@@ -230,6 +230,9 @@ Controller.prototype.drawButtons = function() {
 
             // Joysticks acceleration
             _self.joystick.velocity.acceleration = tempJoystick.pythagorean() * 100 / tempJoystick.radius;
+
+            // Post coordinates to server
+            _self.postCoords();
         } else {
             // Touch is outside outerCircle
 
@@ -245,6 +248,9 @@ Controller.prototype.drawButtons = function() {
 
                     // Set joystick acceleration to max
                     _self.joystick.velocity.acceleration = 100;
+
+                    // Post coordinates to server
+                    _self.postCoords();
                 }
             }
         }
@@ -286,9 +292,9 @@ Controller.prototype.drawButtons = function() {
 
                 // Y coordinates
                 if (_self.joystick.position.y() > node.clientY) {
-                    _self.joystick.velocity.y = 1; // North
+                    _self.joystick.velocity.y = -1; // North
                 } else if (_self.joystick.position.y() < node.clientY) {
-                    _self.joystick.velocity.y = -1; // South
+                    _self.joystick.velocity.y = 1; // South
                 }
             }
         }
@@ -324,6 +330,14 @@ Controller.prototype.drawButtons = function() {
             true
         );
     this.context.fill();
+};
+
+/**
+ * Send coordinates to server
+ */
+Controller.prototype.postCoords = function() {
+    var _self = this;
+    socket.emit('userUpdateCoords', _self.getJoystickVelocity());
 };
 
 // Initialise Controller
