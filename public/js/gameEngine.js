@@ -7,7 +7,7 @@ function GameEngine() {
     var container = document.querySelector('.js--game-canvas');
     var _self = this;
     this.rAFId;
-    this.data;
+    this.data = {};
 
     // Create canvas element
     this.canvas = createEle(false, 'canvas');
@@ -28,6 +28,9 @@ GameEngine.prototype.loop = function() {
     var _self = this;
 
     this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
+
+    // Draw players
+    _self.drawPlayers();
     // TODO
 };
 
@@ -65,8 +68,12 @@ GameEngine.prototype.feedPlayers = function(players) {
  */
 GameEngine.prototype.drawPlayers = function() {
     var _self = this;
-    
+
     if (_self.data.players) {
+        for (var player in _self.data.players) {
+            // TODO: Check if player is disqualified and lives
+            console.log(_self.data.players[player]);
+        };
         // TODO: Draw players
     }
 };
