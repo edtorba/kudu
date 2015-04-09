@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * GameEngine Initialiser
+ */
 function GameEngine() {
     var container = document.querySelector('.js--game-canvas');
     var _self = this;
@@ -17,14 +20,19 @@ function GameEngine() {
     container.appendChild(this.canvas);
 };
 
+/**
+ * Main loop
+ */
 GameEngine.prototype.loop = function() {
     var _self = this;
 
     this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
     // TODO
-    console.log('Loop is working');
 };
 
+/**
+ * Start RAF
+ */
 GameEngine.prototype.start = function() {
     var _self = this;
     if (!_self.rAFId) {
@@ -32,6 +40,9 @@ GameEngine.prototype.start = function() {
     }
 };
 
+/**
+ * Stop RAF
+ */
 GameEngine.prototype.stop = function() {
     var _self = this;
     if (_self.rAFId) {
@@ -40,6 +51,9 @@ GameEngine.prototype.stop = function() {
     }
 };
 
+/**
+ * Draw player vehicles
+ */
 GameEngine.prototype.drawPlayers = function() {
     var _self = this;
     // TODO
