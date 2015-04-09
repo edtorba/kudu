@@ -155,6 +155,7 @@ window.onload = function() {
         if (resp.status) {
             // Switch to controller view
             gameState.switchto('controller');
+            Controller.start();
         }
     });
 };
