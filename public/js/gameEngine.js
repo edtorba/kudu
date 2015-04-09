@@ -1,6 +1,6 @@
 'use strict';
 
-function Game() {
+function GameEngine() {
     var container = document.querySelector('.js--game-canvas');
     var _self = this;
     this.rAFId;
@@ -17,7 +17,7 @@ function Game() {
     container.appendChild(this.canvas);
 };
 
-Game.prototype.loop = function() {
+GameEngine.prototype.loop = function() {
     var _self = this;
 
     this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
@@ -25,14 +25,14 @@ Game.prototype.loop = function() {
     console.log('Loop is working');
 };
 
-Game.prototype.start = function() {
+GameEngine.prototype.start = function() {
     var _self = this;
     if (!_self.rAFId) {
         _self.loop();
     }
 };
 
-Game.prototype.stop = function() {
+GameEngine.prototype.stop = function() {
     var _self = this;
     if (_self.rAFId) {
         window.cancelAnimationFrame(_self.rAFId);
@@ -40,7 +40,7 @@ Game.prototype.stop = function() {
     }
 };
 
-Game.prototype.drawPlayers = function() {
+GameEngine.prototype.drawPlayers = function() {
     var _self = this;
     // TODO
 };
