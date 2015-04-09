@@ -7,6 +7,7 @@ function GameEngine() {
     var container = document.querySelector('.js--game-canvas');
     var _self = this;
     this.rAFId;
+    this.data;
 
     // Create canvas element
     this.canvas = createEle(false, 'canvas');
@@ -52,11 +53,22 @@ GameEngine.prototype.stop = function() {
 };
 
 /**
+ * Feed players object
+ */
+GameEngine.prototype.feedPlayers = function(players) {
+    var _self = this;
+    _self.data.players = players;
+};
+
+/**
  * Draw player vehicles
  */
 GameEngine.prototype.drawPlayers = function() {
     var _self = this;
-    // TODO
+    
+    if (_self.data.players) {
+        // TODO: Draw players
+    }
 };
 
 // Initialise GameEngine

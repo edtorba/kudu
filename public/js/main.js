@@ -70,6 +70,7 @@ window.onload = function() {
             /**
              * Switch to game state and initialise game canvas.
              */
+            GameEngine.feedPlayers(resp.players);
             GameEngine.start();
             // TODO: Pass data to GameEngine
             gameState.switchto('game');

@@ -210,7 +210,7 @@ io.on('connection', function(socket) {
                     io.to(socket.roomCode).emit( 'playersReady', {
                         'status': true,
                         'error': null,
-                        'data': rooms.list[socket.roomCode].players
+                        'players': rooms.list[socket.roomCode].players
                     });
                 }
             } else {
