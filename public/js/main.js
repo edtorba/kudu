@@ -63,15 +63,16 @@ window.onload = function() {
     });
 
     /**
-     * Waiting for players to choose vehicle
+     * Waiting for clients to select vehicles screen.
      */
     socket.on('playersReady', function(resp) {
         if (resp.status) {
-            // Switch to choose map state
-            // SKIP (Skipping choose map for now...)
+            /**
+             * Switch to game state and initialise game canvas.
+             */
+            GameEngine.start();
+            // TODO: Pass data to GameEngine
             gameState.switchto('game');
-
-            // INITIALISE CANVAS
         }
     });
 };
