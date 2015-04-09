@@ -58,3 +58,6 @@ GameEngine.prototype.drawPlayers = function() {
     var _self = this;
     // TODO
 };
+
+// Initialise GameEngine
+var GameEngine = new GameEngine();
