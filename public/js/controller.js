@@ -3,6 +3,7 @@
 function Controller() {
     var container = document.querySelector('.js--controller');
     var _self = this;
+    this.rAFId;
 
     // Joystick related data
     this.joystick = {
@@ -118,6 +119,8 @@ Controller.prototype.getJoystickVelocity = function() {
 Controller.prototype.loop = function() {
     var _self = this;
 
+    this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
+
     /**
      *  A hacky way of dealing with device orientation change.
      */
@@ -129,6 +132,36 @@ Controller.prototype.loop = function() {
     // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    // Draw buttons
+    _self.drawButtons();
+};
+
+/**
+ * Start RAF
+ */
+Controller.prototype.start = function() {
+    var _self = this;
+    if (!_self.rAFId) {
+        _self.loop();
+    }
+};
+
+/**
+ * Stop RAF
+ */
+Controller.prototype.stop = function() {
+    var _self = this;
+    if (_self.rAFId) {
+        window.cancelAnimationFrame(_self.rAFId);
+        _self.rAFId = undefined;
+    }
+};
+
+/**
+ * Draw buttons
+ */
+Controller.prototype.drawButtons = function() {
+    var _self = this;
     /**
      * Joystick related stuff
      */
@@ -295,11 +328,3 @@ Controller.prototype.loop = function() {
 
 // Initialise Controller
 var Controller = new Controller();
-
-// Our animation looph, here we go...
-// place the rAF *before* the loop() to assure as close to
-// 60fps with the setTimeout fallback.
-(function animLoop() {
-    requestAnimFrame(animLoop);
-    Controller.loop();
-})();
