@@ -326,7 +326,7 @@ Controller.prototype.drawButtons = function() {
                 _self.joystick.velocity.rotation = Math.atan2(
                         _self.joystick.position.y() - node.clientY,
                         _self.joystick.position.x() - node.clientX
-                    );
+                    ) - (90 * (180 / Math.PI));
             }
         }
     });

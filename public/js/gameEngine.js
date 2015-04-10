@@ -129,21 +129,6 @@ GameEngine.prototype.drawBullets = function() {
             );
         _self.context.fill();
     };
-    // eachNode(_self.bullets, function(bullet) {
-    //     bullet.updateCoords();
-    //     _self.context.fillStyle = '#ffffff';
-    //     _self.context.beginPath();
-    //     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-    //     _self.context.arc(
-    //             bullet.coordinates.x,
-    //             bullet.coordinates.y,
-    //             15,
-    //             0,
-    //             Math.PI * 2,
-    //             true
-    //         );
-    //     _self.context.fill();
-    // });
 };
 
 // Initialise GameEngine

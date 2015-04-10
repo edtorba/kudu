@@ -11,7 +11,7 @@ function Bullet(id, x, y, rotation) {
         'x': x,
         'y': y,
         // Adding some randomness to bullets to simulate spread
-        'direction': -rotation + (Math.random() * 0.2)
+        'direction': (-rotation) + (Math.random() * 0.2)
     };
     this.velocity = 15;
 };
