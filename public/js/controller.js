@@ -5,8 +5,10 @@ function Controller() {
     var _self = this;
     this.rAFId;
 
-    // Joystick related data
-    this.joystick = {
+    /**
+     * D-Pad settings
+     */
+    this.dpad = {
         'enabled': false,
         'touchID': null,
         'velocity': {
@@ -17,10 +19,10 @@ function Controller() {
         'gutter': 24,
         'position': {
             'x': function() {
-                return _self.joystick.outerCircle.radius + _self.joystick.gutter;
+                return _self.dpad.outerCircle.radius + _self.dpad.gutter;
             },
             'y': function() {
-                return window.innerHeight - _self.joystick.outerCircle.radius - _self.joystick.gutter;
+                return window.innerHeight - _self.dpad.outerCircle.radius - _self.dpad.gutter;
             }
         },
         'outerCircle': {
@@ -34,36 +36,60 @@ function Controller() {
         }
     };
 
-    // Burst button
-    this.burst = {
+    /**
+     * Fire button settings
+     */
+    this.fire = {
+        'enabled': false,
+        'touchID': null,
+        'velocity': {
+            'rotation': 0
+        },
         'gutter': 24,
-        'radius': 75,
         'position': {
             'x': function() {
-                return window.innerWidth - _self.burst.radius - _self.burst.gutter;
+                return window.innerWidth - _self.fire.outerCircle.radius - _self.fire.gutter;
             },
             'y': function() {
-                return window.innerHeight - _self.burst.radius - _self.burst.gutter;
+                return window.innerHeight - _self.fire.outerCircle.radius - _self.fire.gutter;
             }
         },
-        'color': '#fcb116',
-        'activeColor': '#78879f'
+        'outerCircle': {
+            'radius': 75,
+            'color': '#fcb116',
+            'activeColor': '#78879f',
+        },
+        'innerCircle': {
+            'radius': 35,
+            'color': '#78879f'
+        }
     };
 
-    // Touch related data
+    /**
+     * Stores all touch events data
+     */
     this.touches = [];
 
-    // Create canvas element
+    /**
+     * Create canvas
+     */
     this.canvas = createEle(false, 'canvas');
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
-    // Get context
+    /**
+     * Get context
+     */
     this.context = this.canvas.getContext('2d');
 
-    // Insert canvas into DOM tree
+    /**
+     * Insert canvas into DOM tree
+     */
     container.appendChild(this.canvas);
 
+    /**
+     * Touch listeners
+     */
     // Touch listeners
     this.canvas.addEventListener('touchstart', function(e) {
         _self.touchHandler(e, _self);
@@ -76,14 +102,23 @@ function Controller() {
     this.canvas.addEventListener('touchend', function(e) {
         _self.touchHandler(e, _self);
 
-        // Joysting related stuff
-        if (_self.joystick.touchID == e.changedTouches[0].identifier) {
-            _self.joystick.enabled = false;
-            _self.joystick.touchID = null;
+        // D-Pad
+        if (_self.dpad.touchID == e.changedTouches[0].identifier) {
+            _self.dpad.enabled = false;
+            _self.dpad.touchID = null;
 
             // Reset velocity
-            _self.joystick.velocity.x = 0;
-            _self.joystick.velocity.y = 0;
+            _self.dpad.velocity.x = 0;
+            _self.dpad.velocity.y = 0;
+        }
+
+        // Fire button
+        if (_self.fire.touchID == e.changedTouches[0].identifier) {
+            _self.fire.enabled = false;
+            _self.fire.touchID = null;
+
+            // Reset velocity
+            _self.fire.velocity.rotation = 0;
         }
     }, false);
 };
@@ -106,10 +141,17 @@ Controller.prototype.touchHandler = function(e, _self) {
 };
 
 /**
- * Returns joystick velocity
+ * Returns D-Pad velocity
  */
-Controller.prototype.getJoystickVelocity = function() {
-    return this.joystick.velocity;
+Controller.prototype.getDpadVelocity = function() {
+    return this.dpad.velocity;
+};
+
+/**
+ * Returns Fire button velocity
+ */
+Controller.prototype.getFireVelocity = function() {
+    return this.fire.velocity;
 };
 
 /**
@@ -132,7 +174,8 @@ Controller.prototype.loop = function() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Draw buttons
-    _self.drawButtons();
+    _self.drawDpad();
+    _self.drawFire();
 };
 
 /**
@@ -157,144 +200,123 @@ Controller.prototype.stop = function() {
 };
 
 /**
- * Draw buttons
+ * Draw D-Pad
  */
-Controller.prototype.drawButtons = function() {
+Controller.prototype.drawDpad = function() {
     var _self = this;
-    /**
-     * Joystick related stuff
-     */
-    // Outer circle
-    this.context.strokeStyle = this.joystick.outerCircle.color;
-    this.context.lineWidth = this.joystick.outerCircle.width;
 
-    this.context.beginPath();
+    /**
+     * Draw outer circle
+     */
+    _self.context.strokeStyle = _self.dpad.outerCircle.color;
+    _self.context.lineWidth = _self.dpad.outerCircle.width;
+
+    _self.context.beginPath();
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-    this.context.arc(
-            _self.joystick.position.x(),
-            _self.joystick.position.y(),
-            _self.joystick.outerCircle.radius,
+    _self.context.arc(
+            _self.dpad.position.x(),
+            _self.dpad.position.y(),
+            _self.dpad.outerCircle.radius,
             0,
             Math.PI * 2,
             true
         );
-    this.context.stroke();
+    _self.context.stroke();
 
-    // Inner circle
-    var temporaryJoystickCoordinates = {
+    /**
+     * Inner circle data
+     */
+    var innerCircleDpadCoordinates = {
         'position': {
-            'x': _self.joystick.position.x(),
-            'y': _self.joystick.position.y()
+            'x': _self.dpad.position.x(),
+            'y': _self.dpad.position.y()
         }
     };
 
-    // Burst
-    var temporaryBurstColor = {
-        'color': _self.burst.color
-    };
-
-    // Deal with touches
-    eachNode(this.touches, function(node) {
+    /**
+     * Process touch data
+     */
+    eachNode(_self.touches, function(touch) {
 
         /**
-         * Check if touch happened inside outerCircle area.
+         * Check if touch happened inside dpad outer circle area.
          *
-         * Formula:
-            C - Circle
-            T - Touch
+         * Formula: C - Circle, T - Touch
             (xT − xC)^2 + (yT − yC)^2 < r^2
          *
          * My maths teacher would be proud of me :P
          */
-        var tempJoystick = {
-            'radius': Math.pow(_self.joystick.outerCircle.radius, 2),
+        var tempDpadData = {
+            'radius': Math.pow(_self.dpad.outerCircle.radius, 2),
             'xSide': function() {
-                return _self.joystick.position.x() - node.clientX;
+                return _self.dpad.position.x() - touch.clientX;
             },
             'ySide': function() {
-                return _self.joystick.position.y() - node.clientY;
+                return _self.dpad.position.y() - touch.clientY;
             },
             'pythagorean': function() {
-                return Math.pow(tempJoystick.xSide(), 2) + Math.pow(tempJoystick.ySide(), 2);
+                return Math.pow(tempDpadData.xSide(), 2) + Math.pow(tempDpadData.ySide(), 2);
             }
         };
 
-        if (tempJoystick.pythagorean() < tempJoystick.radius) {
-            _self.joystick.enabled = true;
-            _self.joystick.touchID = node.identifier;
+        if (tempDpadData.pythagorean() < tempDpadData.radius) {
+            _self.dpad.enabled = true;
+            _self.dpad.touchID = touch.identifier;
 
-            // Touch inside outerCircle
-            temporaryJoystickCoordinates.position.x = node.clientX;
-            temporaryJoystickCoordinates.position.y = node.clientY;
+            // Update inner circle position
+            innerCircleDpadCoordinates.position.x = touch.clientX;
+            innerCircleDpadCoordinates.position.y = touch.clientY;
 
             // Post coordinates to server
-            _self.postCoords();
+            _self.postCoordinates();
         } else {
-            // Touch is outside outerCircle
+            // Touch is outside dpad outer circle area
 
-            // Verify that it's the same touch
-            if (_self.joystick.touchID == node.identifier) {
+            // Verify that it is still the same touch that started inside inner circle
+            if (_self.dpad.touchID == touch.identifier) {
+                // Check if dpad is enabled
+                if (_self.dpad.enabled) {
+                    // Update inner circle position
+                    var scaleRation = 
+                        _self.dpad.outerCircle.radius / Math.sqrt(tempDpadData.pythagorean());
 
-                // Verify that joystick is enabled
-                if (_self.joystick.enabled) {
-                    var scaleRatio = _self.joystick.outerCircle.radius / Math.sqrt(tempJoystick.pythagorean());
+                    innerCircleDpadCoordinates.position.x = 
+                        _self.dpad.position.x() - tempDpadData.xSide() * scaleRation;
 
-                    temporaryJoystickCoordinates.position.x = _self.joystick.position.x() - tempJoystick.xSide() * scaleRatio;
-                    temporaryJoystickCoordinates.position.y = _self.joystick.position.y() - tempJoystick.ySide() * scaleRatio;
+                    innerCircleDpadCoordinates.position.y = 
+                        _self.dpad.position.y() - tempDpadData.ySide() * scaleRation;
 
                     // Post coordinates to server
-                    _self.postCoords();
+                    _self.postCoordinates();
                 }
             }
         }
 
         /**
-         * Check if touch happened inside burst area.
+         * Calculate D-Pad velocity and rotation
          */
-        var tempBurst = {
-            'radius': Math.pow(_self.burst.radius, 2),
-            'xSide': function() {
-                return _self.burst.position.x() - node.clientX;
-            },
-            'ySide': function() {
-                return _self.burst.position.y() - node.clientY;
-            },
-            'pythagorean': function() {
-                return Math.pow(tempBurst.xSide(), 2) + Math.pow(tempBurst.ySide(), 2);
-            }
-        };
-
-        if (tempBurst.pythagorean() < tempBurst.radius) {
-            temporaryBurstColor.color = _self.burst.activeColor;
-            _self.postBurst();
-        }
-
-        /**
-         * Workout joystick innerCircle direction
-         * e.g. south, west, north, east
-         */
-        // Verify that it's the right touch
-        if (_self.joystick.touchID == node.identifier) {
-            // Verify that joystick is enabled
-            if (_self.joystick.enabled) {
+        // Check if it's right touch data
+        if (_self.dpad.touchID == touch.identifier) {
+            // Check if dpad is enabled
+            if (_self.dpad.enabled) {
                 /**
                  * X velocity
                  */
                 // Negative
-                if (_self.joystick.position.x() > node.clientX) {
-                    if (_self.joystick.position.x() - _self.joystick.outerCircle.radius > node.clientX) {
-                        _self.joystick.velocity.x = -100;
+                if (_self.dpad.position.x() > touch.clientX) {
+                    if (_self.dpad.position.x() - _self.dpad.outerCircle.radius > touch.clientX) {
+                        _self.dpad.velocity.x = -100;
                     } else {
-                        var width = _self.joystick.position.x() - node.clientX;
-                        _self.joystick.velocity.x = -(width * 100 / _self.joystick.outerCircle.radius);
+                        var width = _self.dpad.position.x() - touch.clientX;
+                        _self.dpad.velocity.x = -(width * 100 / _self.dpad.outerCircle.radius);
                     }
                 // Positive
-                } else if (_self.joystick.position.x() < node.clientX) {
-                    if (_self.joystick.position.x() + _self.joystick.outerCircle.radius > node.clientX) {
-                        var width =  node.clientX - _self.joystick.position.x();
-                        _self.joystick.velocity.x = width * 100 / _self.joystick.outerCircle.radius;
+                } else {
+                    if (_self.dpad.position.x() + _self.dpad.outerCircle.radius > touch.clientX) {
+                        var width = touch.clientX - _self.dpad.position.x();
+                        _self.dpad.velocity.x = width * 100 / _self.dpad.outerCircle.radius;
                     } else {
-                        _self.joystick.velocity.x = 100;
+                        _self.dpad.velocity.x = 100;
                     }
                 }
 
@@ -302,82 +324,192 @@ Controller.prototype.drawButtons = function() {
                  * Y velocity
                  */
                 // Negative
-                if (_self.joystick.position.y() > node.clientY) {
-                    if (_self.joystick.position.y() - _self.joystick.outerCircle.radius > node.clientY) {
-                        _self.joystick.velocity.y = -100;
+                if (_self.dpad.position.y() > touch.clientY) {
+                    if (_self.dpad.position.y() - _self.dpad.outerCircle.radius > touch.clientY) {
+                        _self.dpad.velocity.y = -100;
                     } else {
-                        var height = _self.joystick.position.y() - node.clientY;
-                        _self.joystick.velocity.y = -(height * 100 / _self.joystick.outerCircle.radius);
+                        var heigh = _self.dpad.position.y() - touch.clientY;
+                        _self.dpad.velocity.y = -(heigh * 100 / _self.dpad.outerCircle.radius);
                     }
                 // Positive
-                } else if (_self.joystick.position.y() < node.clientY) {
-                    if (_self.joystick.position.y() + _self.joystick.outerCircle.radius > node.clientY) {
-                        var height = node.clientY - _self.joystick.position.y();
-                        _self.joystick.velocity.y = height * 100 / _self.joystick.outerCircle.radius;
+                } else {
+                    if (_self.dpad.position.y() + _self.dpad.outerCircle.radius > touch.clientY) {
+                        var height = touch.clientY - _self.dpad.position.y();
+                        _self.dpad.velocity.y = height * 100 / _self.dpad.outerCircle.radius;
                     } else {
-                        _self.joystick.velocity.y = 100;
+                        _self.dpad.velocity.y = 100;
                     }
                 }
 
-                _self.joystick.velocity.x = _self.joystick.velocity.x / 100;
-                _self.joystick.velocity.y = _self.joystick.velocity.y / 100;
+                _self.dpad.velocity.x = _self.dpad.velocity.x / 100;
+                _self.dpad.velocity.y = _self.dpad.velocity.y / 100;
 
-                // Rotation
-                _self.joystick.velocity.rotation = Math.atan2(
-                        _self.joystick.position.y() - node.clientY,
-                        _self.joystick.position.x() - node.clientX
-                    ) - (90 * (180 / Math.PI));
+                /**
+                 * Calculate D-Pad rotation
+                 */
+                _self.dpad.velocity.rotation = Math.atan2(
+                        _self.dpad.position.y() - touch.clientY,
+                        _self.dpad.position.x() - touch.clientX
+                    );
             }
         }
     });
 
-    // Inner circle
-    this.context.fillStyle = this.joystick.innerCircle.color;
-    this.context.beginPath();
-    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-    this.context.arc(
-            temporaryJoystickCoordinates.position.x,
-            temporaryJoystickCoordinates.position.y,
-            _self.joystick.innerCircle.radius,
-            0,
-            Math.PI * 2,
-            true
-        );
-    this.context.fill();
-
-
     /**
-     * Burst button
+     * Draw inner circle
      */
-    this.context.fillStyle = temporaryBurstColor.color;
-    this.context.beginPath();
+    _self.context.fillStyle = _self.dpad.innerCircle.color;
+    _self.context.beginPath();
     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-    this.context.arc(
-            _self.burst.position.x(),
-            _self.burst.position.y(),
-            _self.burst.radius,
+    _self.context.arc(
+            innerCircleDpadCoordinates.position.x,
+            innerCircleDpadCoordinates.position.y,
+            _self.dpad.innerCircle.radius,
             0,
             Math.PI * 2,
             true
         );
-    this.context.fill();
+    _self.context.fill();
 };
 
 /**
- * Send coordinates to server
+ * Draw fire button
  */
-Controller.prototype.postCoords = function() {
+Controller.prototype.drawFire = function() {
     var _self = this;
-    socket.emit('userUpdateCoords', _self.getJoystickVelocity());
+
+    /**
+     * Draw outer circle
+     */
+    _self.context.fillStyle = _self.fire.outerCircle.color;
+    _self.context.beginPath();
+    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    _self.context.arc(
+            _self.fire.position.x(),
+            _self.fire.position.y(),
+            _self.fire.outerCircle.radius,
+            0,
+            Math.PI * 2,
+            true
+        );
+    _self.context.fill();
+
+    /**
+     * Inner circle data
+     */
+    var innerCircleFireCoordinates = {
+        'position': {
+            'x': _self.fire.position.x(),
+            'y': _self.fire.position.y()
+        }
+    };
+
+    /**
+     * Process touch data
+     */
+    eachNode(_self.touches, function(touch) {
+
+        /**
+         * Check if touch happened inside fire outer circle area.
+         *
+         * Formula: C - Circle, T - Touch
+            (xT − xC)^2 + (yT − yC)^2 < r^2
+         */
+        var tempFireData = {
+            'radius': Math.pow(_self.fire.outerCircle.radius, 2),
+            'xSide': function() {
+                return _self.fire.position.x() - touch.clientX;
+            },
+            'ySide': function() {
+                return _self.fire.position.y() - touch.clientY;
+            },
+            'pythagorean': function() {
+                return Math.pow(tempFireData.xSide(), 2) + Math.pow(tempFireData.ySide(), 2);
+            }
+        };
+
+        if (tempFireData.pythagorean() < tempFireData.radius) {
+            _self.fire.enabled = true;
+            _self.fire.touchID = touch.identifier;
+
+            // Update inner circle position
+            innerCircleFireCoordinates.position.x = touch.clientX;
+            innerCircleFireCoordinates.position.y = touch.clientY;
+
+            // Post fire to server
+            _self.postFire();
+        } else {
+            // Touch is outside fire outer circle area
+
+            // Verify that it is still the same touch that started inside inner circle
+            if (_self.fire.touchID == touch.identifier) {
+                // Check if fire button is enabled
+                if (_self.fire.enabled) {
+                    // Update inner circle position
+                    var scaleRation = 
+                        _self.fire.outerCircle.radius / Math.sqrt(tempFireData.pythagorean());
+
+                    innerCircleFireCoordinates.position.x = 
+                        _self.fire.position.x() - tempFireData.xSide() * scaleRation;
+
+                    innerCircleFireCoordinates.position.y = 
+                        _self.fire.position.y() - tempFireData.ySide() * scaleRation;
+
+                    // Post fire to server
+                    _self.postFire();
+                }
+            }
+        }
+
+        /**
+         * Calculate fire rotation
+         */
+        // Check if it's right touch data
+        if (_self.fire.touchID == touch.identifier) {
+            // Check if fire button is enabled
+            if (_self.fire.enabled) {
+                _self.fire.velocity.rotation = Math.atan2(
+                        _self.fire.position.y() - touch.clientY,
+                        _self.fire.position.x() - touch.clientX
+                    );
+            }
+        }
+    });
+
+    /**
+     * Draw inner circle
+     */
+    _self.context.fillStyle = _self.fire.innerCircle.color;
+    _self.context.beginPath();
+    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    _self.context.arc(
+            innerCircleFireCoordinates.position.x,
+            innerCircleFireCoordinates.position.y,
+            _self.fire.innerCircle.radius,
+            0,
+            Math.PI * 2,
+            true
+        );
+    _self.context.fill();
+};
+
+/**
+ * Post client coordinates to server
+ */
+Controller.prototype.postCoordinates = function() {
+    var _self = this;
+    socket.emit('userUpdateCoords', _self.getDpadVelocity());
 };
 
 /**
  * Trigger bullets
  */
-Controller.prototype.postBurst = function() {
-    var _self = this;
-    socket.emit('userUpdateBullets');
+Controller.prototype.postFire = function() {
+    var _self = this;;
+    socket.emit('userUpdateBullets', _self.getFireVelocity());
 };
 
-// Initialise Controller
+/**
+ * Initialise Controller
+ */
 var Controller = new Controller();
