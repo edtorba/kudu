@@ -10,9 +10,9 @@ function Cars() {
 
 // Initialise default cars
 Cars.prototype.init = function() {
-    this.create('Golden Tiger', 3, 7, 4); // Quick
-    this.create('Blood Cobra', 3, 4, 7);  // Strong
-    this.create('Jungle Whale', 7, 3, 4); // Prot
+    this.create('Golden Tiger', 5, 10, 7); // Quick
+    this.create('Blood Cobra', 5, 7, 10);  // Strong
+    this.create('Jungle Whale', 10, 5, 7); // Prot
 };
 
 // Create new car and add it to list
