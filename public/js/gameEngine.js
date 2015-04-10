@@ -33,7 +33,10 @@ GameEngine.prototype.loop = function() {
     // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     
-    // Draw players
+    // Delete objects
+    _self.deleteBullets();
+
+    // Draw objects
     _self.drawPlayers();
     _self.drawBullets();
 };
@@ -108,6 +111,21 @@ GameEngine.prototype.drawPlayers = function() {
 };
 
 /**
+ */
+GameEngine.prototype.deleteBullets = function() {
+    var _self = this;
+
+    for (var i = 0; i < _self.bullets.length; i++) {
+        if (_self.bullets[i].coordinates.x < 0
+            || _self.bullets[i].coordinates.x > window.innerWidth
+            || _self.bullets[i].coordinates.y < 0
+            || _self.bullets[i].coordinates.y > window.innerHeight) {
+            _self.bullets.splice(i, 1);
+        }
+    };
+};
+
+/**
  * Draw bullets
  */
 GameEngine.prototype.drawBullets = function() {
@@ -122,7 +140,7 @@ GameEngine.prototype.drawBullets = function() {
         _self.context.arc(
                 _self.bullets[i].coordinates.x,
                 _self.bullets[i].coordinates.y,
-                15,
+                _self.bullets[i].radius,
                 0,
                 Math.PI * 2,
                 true
