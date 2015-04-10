@@ -34,6 +34,9 @@ Player.prototype.setCar = function(carObj) {
     this.car.model = carObj;
 };
 
+/**
+ * Update player x and y coordinates and rotation
+ */
 Player.prototype.updateCoords = function(velocity) {
     // Update position based on velocity
     this.coordinates.x += velocity.x * (this.car.model.speed * 0.5);

@@ -266,6 +266,7 @@ Controller.prototype.drawButtons = function() {
 
         if (tempBurst.pythagorean() < tempBurst.radius) {
             temporaryBurstColor.color = _self.burst.activeColor;
+            _self.postBurst();
         }
 
         /**
@@ -368,6 +369,14 @@ Controller.prototype.drawButtons = function() {
 Controller.prototype.postCoords = function() {
     var _self = this;
     socket.emit('userUpdateCoords', _self.getJoystickVelocity());
+};
+
+/**
+ * Trigger bullets
+ */
+Controller.prototype.postBurst = function() {
+    var _self = this;
+    socket.emit('userUpdateBullets');
 };
 
 // Initialise Controller

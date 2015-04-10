@@ -246,6 +246,14 @@ io.on('connection', function(socket) {
             'players': rooms.list[socket.roomCode].players
         });
     });
+
+    /**
+     * User pressed burst button, we have to grab user coords 
+     * and pass them to browser to generate bullets.
+     */
+    socket.on('userUpdateBullets', function() {
+        // TODO
+    });
 });
 
 http.listen(3000, function() {

@@ -1,0 +1,1 @@
+"use strict";function Bullet(t,o,i,e){this.id=t,this.coordinates={x:o,y:o,direction:e+.2*Math.random()},this.velocity=15}Bullet.prototype.updateCoords=function(){var t=this;t.coordinates.x+=Math.sin(t.coordinates.direction)*t.velocity,t.coordinates.y+=Math.cos(t.coordinates.direction)*t.velocity};
