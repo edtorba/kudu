@@ -111,6 +111,7 @@ GameEngine.prototype.drawPlayers = function() {
 };
 
 /**
+ * Delete bullets that are out off the screen
  */
 GameEngine.prototype.deleteBullets = function() {
     var _self = this;
