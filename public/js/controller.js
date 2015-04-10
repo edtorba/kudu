@@ -471,7 +471,7 @@ Controller.prototype.drawFire = function() {
                 _self.fire.velocity.rotation = Math.atan2(
                         _self.fire.position.y() - touch.clientY,
                         _self.fire.position.x() - touch.clientX
-                    );
+                    ) + (Math.PI / 2);
             }
         }
     });

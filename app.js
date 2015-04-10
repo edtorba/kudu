@@ -258,7 +258,7 @@ io.on('connection', function(socket) {
      * User pressed burst button, we have to grab user coords 
      * and pass them to browser to generate bullets.
      */
-    socket.on('userUpdateBullets', function() {
+    socket.on('userUpdateBullets', function(bullet) {
         // Check if client is valid
         if (typeof socket.roomCode !== 'undefined') {
 
@@ -271,7 +271,7 @@ io.on('connection', function(socket) {
                     'player': {
                         'id': socket.id,
                         'coordinates': rooms.list[socket.roomCode].players[socket.id].coordinates,
-                        'rotation': rooms.list[socket.roomCode].players[socket.id].rotation
+                        'rotation': bullet.rotation
                     }
                 });
             }
