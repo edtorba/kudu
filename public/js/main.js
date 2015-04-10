@@ -85,4 +85,13 @@ window.onload = function() {
             GameEngine.feedPlayers(resp.players);
         }
     });
+
+    /**
+     * Fire bullets
+     */
+    socket.on('userUpdateBullets', function(resp) {
+        if (resp.status) {
+            GameEngine.feedBullets(resp.player);
+        }
+    });
 };

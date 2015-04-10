@@ -9,9 +9,9 @@ function Bullet(id, x, y, rotation) {
     this.id = id;
     this.coordinates = {
         'x': x,
-        'y': x,
+        'y': y,
         // Adding some randomness to bullets to simulate spread
-        'direction': rotation + (Math.random() * 0.2)
+        'direction': -rotation + (Math.random() * 0.2)
     };
     this.velocity = 15;
 };

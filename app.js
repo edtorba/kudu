@@ -259,7 +259,23 @@ io.on('connection', function(socket) {
      * and pass them to browser to generate bullets.
      */
     socket.on('userUpdateBullets', function() {
-        // TODO
+        // Check if client is valid
+        if (typeof socket.roomCode !== 'undefined') {
+
+            // Check if room exists
+            if (rooms.exists(socket.roomCode)) {
+                // Send user data to browser
+                io.to(rooms.list[socket.roomCode].owner).emit('userUpdateBullets', {
+                    'status': true,
+                    'error': null,
+                    'player': {
+                        'id': socket.id,
+                        'coordinates': rooms.list[socket.roomCode].players[socket.id].coordinates,
+                        'rotation': rooms.list[socket.roomCode].players[socket.id].rotation
+                    }
+                });
+            }
+        }
     });
 });
 

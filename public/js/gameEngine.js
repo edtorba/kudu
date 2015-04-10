@@ -8,6 +8,7 @@ function GameEngine() {
     var _self = this;
     this.rAFId;
     this.data = {};
+    this.bullets = [];
 
     // Create canvas element
     this.canvas = createEle(false, 'canvas');
@@ -31,10 +32,10 @@ GameEngine.prototype.loop = function() {
 
     // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+    
     // Draw players
     _self.drawPlayers();
-    // TODO
+    _self.drawBullets();
 };
 
 /**
@@ -67,6 +68,19 @@ GameEngine.prototype.feedPlayers = function(players) {
 };
 
 /**
+ * Feed bullets
+ */
+GameEngine.prototype.feedBullets = function(player) {
+    var _self = this;
+    _self.bullets.push(new Bullet(
+            player.id,
+            player.coordinates.x,
+            player.coordinates.y,
+            player.rotation
+        ));
+};
+
+/**
  * Draw player vehicles
  */
 GameEngine.prototype.drawPlayers = function() {
@@ -90,8 +104,46 @@ GameEngine.prototype.drawPlayers = function() {
             // TODO: Check if player is disqualified and lives
             // console.log(_self.data.players[player]);
         };
-        // TODO: Draw players
     }
+};
+
+/**
+ * Draw bullets
+ */
+GameEngine.prototype.drawBullets = function() {
+    var _self = this;
+
+    for (var i = 0; i < _self.bullets.length; i++) {
+        _self.bullets[i].updateCoords();
+
+        _self.context.fillStyle = '#ffffff';
+        _self.context.beginPath();
+        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+        _self.context.arc(
+                _self.bullets[i].coordinates.x,
+                _self.bullets[i].coordinates.y,
+                15,
+                0,
+                Math.PI * 2,
+                true
+            );
+        _self.context.fill();
+    };
+    // eachNode(_self.bullets, function(bullet) {
+    //     bullet.updateCoords();
+    //     _self.context.fillStyle = '#ffffff';
+    //     _self.context.beginPath();
+    //     // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    //     _self.context.arc(
+    //             bullet.coordinates.x,
+    //             bullet.coordinates.y,
+    //             15,
+    //             0,
+    //             Math.PI * 2,
+    //             true
+    //         );
+    //     _self.context.fill();
+    // });
 };
 
 // Initialise GameEngine
