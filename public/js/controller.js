@@ -106,19 +106,12 @@ function Controller() {
         if (_self.dpad.touchID == e.changedTouches[0].identifier) {
             _self.dpad.enabled = false;
             _self.dpad.touchID = null;
-
-            // Reset velocity
-            _self.dpad.velocity.x = 0;
-            _self.dpad.velocity.y = 0;
         }
 
         // Fire button
         if (_self.fire.touchID == e.changedTouches[0].identifier) {
             _self.fire.enabled = false;
             _self.fire.touchID = null;
-
-            // Reset velocity
-            _self.fire.velocity.rotation = 0;
         }
     }, false);
 };
