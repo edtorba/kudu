@@ -17,6 +17,7 @@ function Player() {
     this.health = 1000;
     this.lives = 5;
     this.disqualified = false;
+    this.radius = 30;
     this.coordinates = {
         'x': 0,
         'y': 0

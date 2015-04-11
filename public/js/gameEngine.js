@@ -100,7 +100,7 @@ GameEngine.prototype.drawPlayers = function() {
             _self.context.arc(
                     _self.data.players[player].coordinates.x,
                     _self.data.players[player].coordinates.y,
-                    30,
+                    _self.data.players[player].radius,
                     0,
                     Math.PI * 2,
                     true
@@ -159,7 +159,30 @@ GameEngine.prototype.drawBullets = function() {
 GameEngine.prototype.collisionDetection = function() {
     var _self = this;
 
-    // TODO
+    /**
+     * Check if someone has shot someone
+     */
+    if (_self.data.players) {
+        for (var player in _self.data.players) {
+            // _self.data.players[player].coordinates.x,
+            for (var i = 0; i < _self.bullets.length; i++) {
+                if (_self.objectCollision(
+                        _self.data.players[player].coordinates.x,
+                        _self.data.players[player].coordinates.y,
+                        _self.data.players[player].radius,
+                        _self.data.players[player].radius,
+                        _self.bullets[i].coordinates.x,
+                        _self.bullets[i].coordinates.y,
+                        _self.bullets[i].radius,
+                        _self.bullets[i].radius
+                    )) {
+                    if (_self.bullets[i].id != player) {
+                        console.log(_self.bullets[i].id + ' Shot ' + player + ' player');
+                    }
+                }
+            }
+        }
+    }
 };
 
 /**
