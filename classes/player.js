@@ -21,7 +21,11 @@ function Player() {
         'x': 0,
         'y': 0
     };
-    this.rotation = 0;
+    this.velocity = {
+        'x': 0,
+        'y': 0,
+        'rotation': 0
+    };
 };
 
 // Check if player has already selected car
@@ -37,13 +41,20 @@ Player.prototype.setCar = function(carObj) {
 /**
  * Update player x and y coordinates and rotation
  */
-Player.prototype.updateCoords = function(velocity) {
+Player.prototype.updateCoordinates = function(display, velocity) {
     // Update position based on velocity
     this.coordinates.x += velocity.x * (this.car.model.speed * 0.5);
     this.coordinates.y += velocity.y * (this.car.model.speed * 0.5);
 
     // Update rotation
     this.rotation = velocity.rotation;
+
+    // Check if plays has gone out of bounds
+    if (this.coordinates.x < 0) this.coordinates.x = 0;
+    if (this.coordinates.x > display.width) this.coordinates.x = display.width;
+
+    if (this.coordinates.y < 0) this.coordinates.y = 0;
+    if (this.coordinates.y > display.height) this.coordinates.y = display.height;
 };
 
 module.exports = Player;

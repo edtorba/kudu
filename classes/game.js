@@ -8,6 +8,10 @@ var Player = require('./player');
 function Game(owner) {
     this.locked = false;
     this.owner = owner;
+    this.display = {
+        'width': 0,
+        'height': 0
+    };
     this.players = {};
 };
 
@@ -62,6 +66,16 @@ Game.prototype.lock = function() {
 // Unlock game
 Game.prototype.unlock = function() {
     this.locked = false;
+};
+
+// Set display width and height
+Game.prototype.setDisplay = function(display) {
+    this.display = display;
+};
+
+// Get display
+Game.prototype.getDisplay = function() {
+    return this.display;
 };
 
 module.exports = Game;

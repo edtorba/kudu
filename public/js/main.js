@@ -44,8 +44,13 @@ window.onload = function() {
     connectingReadyBtn.onclick = function(e) {
         e.preventDefault();
 
+        var display = {
+            'width': window.innerWidth,
+            'height': window.innerHeight
+        };
+
         // Emit to app.js
-        socket.emit('readyToStart');
+        socket.emit('readyToStart', display);
     }
 
     socket.on('connectedPeople', function(numb) {

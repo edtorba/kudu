@@ -135,7 +135,7 @@ io.on('connection', function(socket) {
     });
 
     // Lock room and allow clients to select vehicle
-    socket.on('readyToStart', function() {
+    socket.on('readyToStart', function(display) {
 
         // Check if client was part of the group
         if (typeof socket.roomCode !== 'undefined') {
@@ -148,6 +148,9 @@ io.on('connection', function(socket) {
 
                     // Check if there is more than two people in the room
                     if (rooms.list[socket.roomCode].numberOfPlayers() > 1) {
+
+                        // Set display width and height
+                        rooms.list[socket.roomCode].setDisplay(display);
 
                         // Lock room
                         rooms.list[socket.roomCode].lock();
@@ -236,13 +239,16 @@ io.on('connection', function(socket) {
     /**
      * User moved joystick, we have to update his coords and notify browser.
      */
-    socket.on('userUpdateCoords', function(coords) {
+    socket.on('userUpdateCoords', function(velocity) {
         // Check if client is valid
         if (typeof socket.roomCode !== 'undefined') {
 
             // Check if room exists
             if (rooms.exists(socket.roomCode)) {
-                rooms.list[socket.roomCode].players[socket.id].updateCoords(coords);
+                rooms.list[socket.roomCode].players[socket.id].updateCoordinates(
+                        rooms.list[socket.roomCode].getDisplay(),
+                        velocity
+                    );
 
                 // Sending fresh coordinates
                 io.to(rooms.list[socket.roomCode].owner).emit('userUpdateCoords', {
