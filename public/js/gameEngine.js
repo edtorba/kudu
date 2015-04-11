@@ -39,6 +39,9 @@ GameEngine.prototype.loop = function() {
     // Draw objects
     _self.drawPlayers();
     _self.drawBullets();
+
+    // Collision detection
+    _self.collisionDetection();
 };
 
 /**
@@ -148,6 +151,31 @@ GameEngine.prototype.drawBullets = function() {
             );
         _self.context.fill();
     };
+};
+
+/**
+ * Collision detection
+ */
+GameEngine.prototype.collisionDetection = function() {
+    var _self = this;
+
+    // TODO
+};
+
+/**
+ * Canvas collision detection
+ * http://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection
+ */
+GameEngine.prototype.objectCollision = function(x1, y1, w1, h1, x2, y2, w2, h2) {
+    w2 += x2;
+    w1 += x1;
+    if (x2 > w1 || x1 > w2) return false;
+
+    h2 += y2;
+    h1 += y1;
+    if (y2 > h1 || y1 > h2) return false;
+
+    return true;
 };
 
 // Initialise GameEngine
