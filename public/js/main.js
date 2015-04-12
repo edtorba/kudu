@@ -83,9 +83,9 @@ window.onload = function() {
     });
 
     /**
-     * Fresh players coordinates
+     * Fresh players data
      */
-    socket.on('userUpdateCoords', function(resp) {
+    socket.on('updateUserData', function(resp) {
         if (resp.status) {
             GameEngine.feedPlayers(resp.players);
         }

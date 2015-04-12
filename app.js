@@ -245,17 +245,23 @@ io.on('connection', function(socket) {
 
             // Check if room exists
             if (rooms.exists(socket.roomCode)) {
-                rooms.list[socket.roomCode].players[socket.id].updateCoordinates(
+
+                // Check if player is alive
+                if (rooms.list[socket.roomCode].players[socket.id].isAlive()) {
+
+                    // Update coordinates
+                    rooms.list[socket.roomCode].players[socket.id].updateCoordinates(
                         rooms.list[socket.roomCode].getDisplay(),
                         velocity
                     );
 
-                // Sending fresh coordinates
-                io.to(rooms.list[socket.roomCode].owner).emit('userUpdateCoords', {
-                    'status': true,
-                    'error': null,
-                    'players': rooms.list[socket.roomCode].players
-                });
+                    // Sending fresh players data
+                    io.to(rooms.list[socket.roomCode].owner).emit('updateUserData', {
+                        'status': true,
+                        'error': null,
+                        'players': rooms.list[socket.roomCode].players
+                    });
+                }
             }
         }
     });
@@ -270,15 +276,45 @@ io.on('connection', function(socket) {
 
             // Check if room exists
             if (rooms.exists(socket.roomCode)) {
-                // Send user data to browser
-                io.to(rooms.list[socket.roomCode].owner).emit('userUpdateBullets', {
+
+                // Check if player is alive
+                if (rooms.list[socket.roomCode].players[socket.id].isAlive()) {
+
+                    // Tell browser to add bullets
+                    io.to(rooms.list[socket.roomCode].owner).emit('userUpdateBullets', {
+                        'status': true,
+                        'error': null,
+                        'player': {
+                            'id': socket.id,
+                            'coordinates': rooms.list[socket.roomCode].players[socket.id].coordinates,
+                            'rotation': bullet.rotation
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    /**
+     * Player got shot, reduce his hp/lives add score
+     */
+    socket.on('playerGotShot', function(data) {
+        // Check if client is valid
+        if (typeof socket.roomCode !== 'undefined') {
+
+            // Check if room exists
+            if (rooms.exists(socket.roomCode)) {
+                // Increase score to attacker
+                rooms.list[socket.roomCode].players[data.attacker].increaseScore();
+
+                // Reduce victims health
+                rooms.list[socket.roomCode].players[data.victim].reduceHealth();
+
+                // Sending fresh players data
+                io.to(rooms.list[socket.roomCode].owner).emit('updateUserData', {
                     'status': true,
                     'error': null,
-                    'player': {
-                        'id': socket.id,
-                        'coordinates': rooms.list[socket.roomCode].players[socket.id].coordinates,
-                        'rotation': bullet.rotation
-                    }
+                    'players': rooms.list[socket.roomCode].players
                 });
             }
         }

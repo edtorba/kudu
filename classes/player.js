@@ -16,7 +16,7 @@ function Player() {
     };
     this.health = 1000;
     this.lives = 5;
-    this.disqualified = false;
+    this.alive = true;
     this.radius = 30;
     this.coordinates = {
         'x': 0,
@@ -56,6 +56,50 @@ Player.prototype.updateCoordinates = function(display, velocity) {
 
     if (this.coordinates.y < 0) this.coordinates.y = 0;
     if (this.coordinates.y > display.height) this.coordinates.y = display.height;
+};
+
+/**
+ * Increase score and money
+ */
+Player.prototype.increaseScore = function() {
+    // Adding 100 score and money per hit
+    this.score += 100;
+    this.money += 100;
+};
+
+/**
+ * Reducing player's health and lives on hit
+ */
+Player.prototype.reduceHealth = function() {
+    if (this.lives >= 0 && this.health > 0) {
+        this.health -= 10;
+
+        /**
+         * If health is lower than 0, reduce lives and reset health
+         */
+        if (this.health <= 0 && this.lives > 0) {
+            this.health = 1000;
+            this.lives -= 1;
+        }
+    } else {
+        this.alive = false;
+    }
+};
+
+/**
+ * Check if player still has lives
+ */
+Player.prototype.isAlive = function() {
+    return this.alive;
+};
+
+/**
+ * Resets user health and lives
+ */
+Player.prototype.resetHealth = function() {
+    this.health = 1000;
+    this.lives = 5;
+    this.alive = true;
 };
 
 module.exports = Player;

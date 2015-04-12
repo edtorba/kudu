@@ -94,21 +94,21 @@ GameEngine.prototype.drawPlayers = function() {
 
     if (_self.data.players) {
         for (var player in _self.data.players) {
-            _self.context.fillStyle = '#ffffff';
-            _self.context.beginPath();
-            // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-            _self.context.arc(
-                    _self.data.players[player].coordinates.x,
-                    _self.data.players[player].coordinates.y,
-                    _self.data.players[player].radius,
-                    0,
-                    Math.PI * 2,
-                    true
-                );
-            _self.context.fill();
-
-            // TODO: Check if player is disqualified and lives
-            // console.log(_self.data.players[player]);
+            // Check if player is alive
+            if (_self.data.players[player].alive) {
+                _self.context.fillStyle = '#ffffff';
+                _self.context.beginPath();
+                // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+                _self.context.arc(
+                        _self.data.players[player].coordinates.x,
+                        _self.data.players[player].coordinates.y,
+                        _self.data.players[player].radius,
+                        0,
+                        Math.PI * 2,
+                        true
+                    );
+                _self.context.fill();
+            }
         };
     }
 };
@@ -164,24 +164,30 @@ GameEngine.prototype.collisionDetection = function() {
      */
     if (_self.data.players) {
         for (var player in _self.data.players) {
-            // _self.data.players[player].coordinates.x,
-            for (var i = 0; i < _self.bullets.length; i++) {
-                if (_self.objectCollision(
-                        _self.data.players[player].coordinates.x,
-                        _self.data.players[player].coordinates.y,
-                        _self.data.players[player].radius,
-                        _self.data.players[player].radius,
-                        _self.bullets[i].coordinates.x,
-                        _self.bullets[i].coordinates.y,
-                        _self.bullets[i].radius,
-                        _self.bullets[i].radius
-                    )) {
-                    if (_self.bullets[i].id != player) {
-                        // TODO: emit to server, reduce hp, add score
-                        console.log(_self.bullets[i].id + ' Shot ' + player + ' player');
+            // Check if player is alive
+            if (_self.data.players[player].alive) {
+                for (var i = 0; i < _self.bullets.length; i++) {
+                    if (_self.objectCollision(
+                            _self.data.players[player].coordinates.x,
+                            _self.data.players[player].coordinates.y,
+                            _self.data.players[player].radius,
+                            _self.data.players[player].radius,
+                            _self.bullets[i].coordinates.x,
+                            _self.bullets[i].coordinates.y,
+                            _self.bullets[i].radius,
+                            _self.bullets[i].radius
+                        )) {
+                        if (_self.bullets[i].id != player) {
+                            // Notify server that player got shot
+                            var data = {
+                                'attacker': _self.bullets[i].id,
+                                'victim': player
+                            };
+                            socket.emit('playerGotShot', data);
 
-                        // Remove bullet that shot player
-                        _self.bullets.splice(i, 1);
+                            // Remove bullet that shot player
+                            _self.bullets.splice(i, 1);
+                        }
                     }
                 }
             }
