@@ -177,7 +177,11 @@ GameEngine.prototype.collisionDetection = function() {
                         _self.bullets[i].radius
                     )) {
                     if (_self.bullets[i].id != player) {
+                        // TODO: emit to server, reduce hp, add score
                         console.log(_self.bullets[i].id + ' Shot ' + player + ' player');
+
+                        // Remove bullet that shot player
+                        _self.bullets.splice(i, 1);
                     }
                 }
             }
