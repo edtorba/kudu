@@ -33,6 +33,22 @@ function Controller() {
         'innerCircle': {
             'radius': 35,
             'color': '#ffffff'
+        },
+        'label': {
+            'text': 'D-Pad',
+            'color': '#ffffff',
+            'font': '16px Valera Round',
+            'textAlign': 'center',
+            'position': {
+                'x': function() {
+                    return _self.dpad.position.x();
+                },
+                'y': function() {
+                    return _self.dpad.position.y() - 
+                     _self.dpad.outerCircle.radius - 
+                     _self.dpad.gutter;
+                }
+            }
         }
     };
 
@@ -62,6 +78,22 @@ function Controller() {
         'innerCircle': {
             'radius': 35,
             'color': '#78879f'
+        },
+        'label': {
+            'text': 'Fire',
+            'color': '#ffffff',
+            'font': '16px Valera Round',
+            'textAlign': 'center',
+            'position': {
+                'x': function() {
+                    return _self.fire.position.x();
+                },
+                'y': function() {
+                    return _self.fire.position.y() - 
+                     _self.fire.outerCircle.radius - 
+                     _self.fire.gutter;
+                }
+            }
         }
     };
 
@@ -215,6 +247,18 @@ Controller.prototype.drawDpad = function() {
             true
         );
     _self.context.stroke();
+
+    /**
+     * Draw label
+     */
+    _self.context.textAlign = _self.dpad.label.textAlign;
+    _self.context.fillStyle = _self.dpad.label.color;
+    _self.context.font = _self.dpad.label.font;
+    _self.context.fillText(
+            _self.dpad.label.text,
+            _self.dpad.label.position.x(),
+            _self.dpad.label.position.y()
+        );
 
     /**
      * Inner circle data
@@ -386,6 +430,18 @@ Controller.prototype.drawFire = function() {
             true
         );
     _self.context.fill();
+
+    /**
+     * Draw label
+     */
+    _self.context.textAlign = _self.fire.label.textAlign;
+    _self.context.fillStyle = _self.fire.label.color;
+    _self.context.font = _self.fire.label.font;
+    _self.context.fillText(
+            _self.fire.label.text,
+            _self.fire.label.position.x(),
+            _self.fire.label.position.y()
+        );
 
     /**
      * Inner circle data
