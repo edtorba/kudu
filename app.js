@@ -63,7 +63,7 @@ io.on('connection', function(socket) {
 
     // Create room
     socket.on('createRoom', function() {
-        var roomCode = code.generate(5, '#aA');
+        var roomCode = code.generate(5, 'a');
 
         // Add new room to our list
         rooms.create(roomCode, socket.id);
