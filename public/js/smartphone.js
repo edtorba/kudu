@@ -76,7 +76,8 @@ window.onload = function() {
             // Create list of cars
             var i = 0;
             for (var car in resp.cars) {
-                // TODO: car image
+                // Car image
+                selectVehicleCarList[i].querySelector('.js--car__image').src = resp.cars[car].image;
                 // Car name
                 selectVehicleCarList[i].dataset.vehicleName = resp.cars[car].name;
                 selectVehicleCarList[i].querySelector('.js--select-vehicle--name').innerHTML = resp.cars[car].name;
@@ -166,4 +167,19 @@ window.onload = function() {
             Controller.setHealthAndLives(resp.health);
         }
     })
+
+    // Fresh health
+    socket.on('freshScore', function(resp) {
+        if (resp.status) {
+            // Update score
+            Controller.setScore(resp.scoreAndMoney.score);
+        }
+    });
+
+    // Player lost life
+    socket.on('playerLostLife', function(resp) {
+        if (resp.status) {
+            window.navigator.vibrate(1000);
+        }
+    });
 };

@@ -10,15 +10,15 @@ function Cars() {
 
 // Initialise default cars
 Cars.prototype.init = function() {
-    this.create('Golden Tiger', 5, 10, 7); // Quick
-    this.create('Blood Cobra', 5, 7, 10);  // Strong
-    this.create('Jungle Whale', 10, 5, 7); // Prot
+    this.create('Golden Tiger', 5, 10, 7, 'images/red.png'); // Quick
+    this.create('Blood Cobra', 5, 7, 10, 'images/blue.png');  // Strong
+    this.create('Jungle Whale', 10, 5, 7, 'images/green.png'); // Prot
 };
 
 // Create new car and add it to list
-Cars.prototype.create = function(name, armor, speed, power) {
+Cars.prototype.create = function(name, armor, speed, power, image) {
     var key = this.toCamelCase(name);
-    this.list[key] = new CarSpecs(name, armor, speed, power);
+    this.list[key] = new CarSpecs(name, armor, speed, power, image);
 };
 
 // Check if car exists

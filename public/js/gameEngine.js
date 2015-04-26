@@ -10,6 +10,10 @@ function GameEngine() {
     this.data = {};
     this.bullets = [];
 
+    // Background image
+    this.background = new Image();
+    this.background.src = 'images/background.png';
+
     // Create canvas element
     this.canvas = createEle(false, 'canvas');
     this.canvas.width = window.innerWidth;
@@ -32,9 +36,12 @@ GameEngine.prototype.loop = function() {
 
     // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
+
     // Delete objects
     _self.deleteBullets();
+
+    // Draw background
+    _self.drawBackground();
 
     // Draw objects
     _self.drawPlayers();
@@ -111,9 +118,11 @@ GameEngine.prototype.reduceHealth = function(id) {
             _self.data.players[id].lives > 0) {
                 _self.data.players[id].health = 1000;
                 _self.data.players[id].lives -= 1;
+                socket.emit('playerLostLife', id);
         }
     } else {
-        _self.data.players[player.id].alive = false;
+        _self.data.players[id].alive = false;
+        socket.emit('playerDied', id);
     }
 };
 
@@ -157,6 +166,17 @@ GameEngine.prototype.getScore = function(id) {
 };
 
 /**
+ * Draw game background
+ */
+GameEngine.prototype.drawBackground = function() {
+    var _self = this;
+
+    var pattern = _self.context.createPattern(_self.background, 'repeat');
+    _self.context.fillStyle = pattern;
+    _self.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+};
+
+/**
  * Draw player vehicles
  */
 GameEngine.prototype.drawPlayers = function() {
@@ -168,18 +188,26 @@ GameEngine.prototype.drawPlayers = function() {
         for (var player in _self.data.players) {
             // Check if player is alive
             if (_self.data.players[player].alive) {
-                _self.context.fillStyle = '#ffffff';
-                _self.context.beginPath();
-                // arc(x, y, radius, startAngle, endAngle, anticlockwise)
-                _self.context.arc(
+                _self.context.save();
+                _self.context.translate(
                         _self.data.players[player].coordinates.x,
-                        _self.data.players[player].coordinates.y,
-                        _self.data.players[player].radius,
-                        0,
-                        Math.PI * 2,
-                        true
+                        _self.data.players[player].coordinates.y
                     );
-                _self.context.fill();
+                _self.context.rotate(_self.data.players[player].velocity.rotation);
+                var newImage = new Image();
+                newImage.src = _self.data.players[player].car.model.image;
+                _self.context.drawImage(
+                        newImage,
+                        0,
+                        0,
+                        60,
+                        60,
+                        -30,
+                        -30,
+                        60,
+                        60
+                    );
+                _self.context.restore();
             }
         };
     }

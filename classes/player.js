@@ -108,6 +108,13 @@ Player.prototype.isAlive = function() {
 };
 
 /**
+ * Kill player
+ */
+Player.prototype.kill = function() {
+    this.alive = false;
+}
+
+/**
  * Resets user health and lives
  */
 Player.prototype.resetHealth = function() {

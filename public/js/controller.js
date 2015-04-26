@@ -141,6 +141,29 @@ function Controller() {
         }
     };
 
+
+    /**
+     * Score and Lives
+     */
+    this.playerStats = {
+        'score': 0,
+        'gutter': 24,
+        'position': {
+            'x': function() {
+                return window.innerWidth - _self.playerStats.gutter - 50;
+            },
+            'y': function() {
+                return _self.playerStats.gutter * 1.75;
+            }
+        },
+        'label': {
+            'text': 'score',
+            'color': '#ffffff',
+            'font': '16px Valera Round',
+            'textAlign': 'right'
+        }
+    };
+
     /**
      * Stores all touch events data
      */
@@ -233,6 +256,15 @@ Controller.prototype.setHealthAndLives = function(health) {
 };
 
 /**
+ * Set score value
+ */
+Controller.prototype.setScore = function(score) {
+    var _self = this;
+
+    _self.playerStats.score = score;
+};
+
+/**
  * Main loop. That's where everything happenes
  */
 Controller.prototype.loop = function() {
@@ -257,6 +289,9 @@ Controller.prototype.loop = function() {
 
     // Draw health bar
     _self.drawHealthBar();
+
+    // Draw player stats
+    _self.drawPlayerStats();
 };
 
 /**
@@ -443,7 +478,7 @@ Controller.prototype.drawDpad = function() {
                 _self.dpad.velocity.rotation = Math.atan2(
                         _self.dpad.position.y() - touch.clientY,
                         _self.dpad.position.x() - touch.clientX
-                    );
+                    ) - (Math.PI / 2);
             }
         }
     });
@@ -641,6 +676,22 @@ Controller.prototype.drawHealthBar = function() {
             _self.healthBar.health.health,
             _self.healthBar.label.position.x(),
             _self.healthBar.label.position.y()
+        );
+};
+
+Controller.prototype.drawPlayerStats = function() {
+    var _self = this;
+
+    /**
+     * Score
+     */
+    _self.context.textAlign = _self.playerStats.label.textAlign;
+    _self.context.fillStyle = _self.playerStats.label.color;
+    _self.context.font = _self.playerStats.label.font;
+    _self.context.fillText(
+            _self.playerStats.score + ' ' + _self.playerStats.label.text,
+            _self.playerStats.position.x(),
+            _self.playerStats.position.y()
         );
 };
 

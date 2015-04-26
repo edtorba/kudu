@@ -308,7 +308,12 @@ io.on('connection', function(socket) {
                     .setScoreAndMoney(
                             data.attacker.scoreAndMoney
                         );
-                // TODO emit to attacker fresh score
+
+                io.to(data.attacker.id).emit('freshScore', {
+                    'status': true,
+                    'error': null,
+                    'scoreAndMoney': data.attacker.scoreAndMoney
+                });
 
                 // Set victims health
                 rooms.list[socket.roomCode]
@@ -323,9 +328,25 @@ io.on('connection', function(socket) {
                                 .players[data.victim.id]
                                 .getHealthAndLives()
                 });
-                // TODO emit to victim fresh health and lives
             }
         }
+    });
+
+    /**
+     * Player lost life, emit to controller - make it vibrate
+     */
+    socket.on('playerLostLife', function(data) {
+        io.to(data).emit('playerLostLife', {
+            'status': true,
+            'error': null
+        })
+    });
+
+    /**
+     * Player died
+     */
+    socket.on('playerDied', function(id) {
+        rooms.list[socket.roomCode].players[id].kill();
     });
 });
 
