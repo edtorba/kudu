@@ -158,4 +158,12 @@ window.onload = function() {
             Controller.start();
         }
     });
+
+    // Fresh health
+    socket.on('freshHealth', function(resp) {
+        if (resp.status) {
+            // Update health bar
+            Controller.setHealthAndLives(resp.health);
+        }
+    })
 };

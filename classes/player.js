@@ -14,6 +14,7 @@ function Player() {
             'power': 0
         }
     };
+    this.maxHealth = 1000;
     this.health = 1000;
     this.lives = 5;
     this.alive = true;
@@ -22,6 +23,7 @@ function Player() {
         'x': 0,
         'y': 0
     };
+    this.friction = 0.9;
     this.velocity = {
         'x': 0,
         'y': 0,
@@ -40,50 +42,62 @@ Player.prototype.setCar = function(carObj) {
 };
 
 /**
- * Update player x and y coordinates and rotation
+ * Get velocity from a controller and set it to player object
  */
-Player.prototype.updateCoordinates = function(display, velocity) {
-    // Update position based on velocity
-    this.coordinates.x += velocity.x * (this.car.model.speed * 0.5);
-    this.coordinates.y += velocity.y * (this.car.model.speed * 0.5);
-
-    // Update rotation
-    this.rotation = velocity.rotation;
-
-    // Check if plays has gone out of bounds
-    if (this.coordinates.x < 0) this.coordinates.x = 0;
-    if (this.coordinates.x > display.width) this.coordinates.x = display.width;
-
-    if (this.coordinates.y < 0) this.coordinates.y = 0;
-    if (this.coordinates.y > display.height) this.coordinates.y = display.height;
+Player.prototype.setVelocity = function(velocity) {
+    this.velocity = velocity;
 };
 
 /**
- * Increase score and money
+ * Get player velocity
  */
-Player.prototype.increaseScore = function() {
-    // Adding 100 score and money per hit
-    this.score += 100;
-    this.money += 100;
+Player.prototype.getVelocity = function() {
+    return this.velocity;
 };
 
 /**
- * Reducing player's health and lives on hit
+ * Set player's score and money
  */
-Player.prototype.reduceHealth = function() {
-    if (this.lives >= 0 && this.health > 0) {
-        this.health -= 10;
+Player.prototype.setScoreAndMoney = function(scoreAndMoney) {
+    this.score = scoreAndMoney.score;
+    this.money = scoreAndMoney.money;
+};
 
-        /**
-         * If health is lower than 0, reduce lives and reset health
-         */
-        if (this.health <= 0 && this.lives > 0) {
-            this.health = 1000;
-            this.lives -= 1;
-        }
-    } else {
-        this.alive = false;
-    }
+/**
+ * Get player's score and money
+ */
+Player.prototype.getScoreAndMoney = function() {
+    var _self = this;
+
+    var data = {
+        'score': _self.score,
+        'money': _self.money
+    };
+
+    return data;
+};
+
+/**
+ * Set player's health and lives
+ */
+Player.prototype.setHealthAndLives = function(healthAndLives) {
+    this.health = healthAndLives.health;
+    this.lives = healthAndLives.lives;
+};
+
+/**
+ * Get player's health and lives
+ */
+Player.prototype.getHealthAndLives = function() {
+    var _self = this;
+
+    var data = {
+        'maxHealth': _self.maxHealth,
+        'health': _self.health,
+        'lives': _self.lives
+    };
+
+    return data;
 };
 
 /**

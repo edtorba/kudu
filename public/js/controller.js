@@ -98,6 +98,50 @@ function Controller() {
     };
 
     /**
+     * Health bar settings
+     */
+    this.healthBar = {
+        'width': 150,
+        'height': 35,
+        'gutter': 24,
+        'position': {
+            'x': function() {
+                return _self.healthBar.gutter;
+            },
+            'y': function() {
+                return _self.healthBar.gutter;
+            }
+        },
+        'bar': {
+            'color': '#78879f'
+        },
+        'value': {
+            'color': '#6faa80'
+        },
+        'label': {
+            'color': '#ffffff',
+            'font': '16px Valera Round',
+            'textAlign': 'center',
+            'position': {
+                'x': function() {
+                    return _self.healthBar.position.x() + 
+                    _self.healthBar.gutter;
+                },
+                'y': function() {
+                    return _self.healthBar.position.y() + 
+                     _self.healthBar.height / 
+                     2 + 6;
+                }
+            }
+        },
+        'health': {
+            'maxHealth': 1000,
+            'health': 1000,
+            'lives': 0
+        }
+    };
+
+    /**
      * Stores all touch events data
      */
     this.touches = [];
@@ -180,6 +224,15 @@ Controller.prototype.getFireVelocity = function() {
 };
 
 /**
+ * Set health value
+ */
+Controller.prototype.setHealthAndLives = function(health) {
+    var _self = this;
+
+    _self.healthBar.health = health;
+};
+
+/**
  * Main loop. That's where everything happenes
  */
 Controller.prototype.loop = function() {
@@ -201,6 +254,9 @@ Controller.prototype.loop = function() {
     // Draw buttons
     _self.drawDpad();
     _self.drawFire();
+
+    // Draw health bar
+    _self.drawHealthBar();
 };
 
 /**
@@ -540,6 +596,52 @@ Controller.prototype.drawFire = function() {
             true
         );
     _self.context.fill();
+};
+
+/**
+ * Draw Health bar
+ */
+Controller.prototype.drawHealthBar = function() {
+    var _self = this;
+
+    /**
+     * Draw bar
+     */
+    _self.context.fillStyle = _self.healthBar.bar.color;
+    _self.context.beginPath();
+    _self.context.rect(
+            _self.healthBar.position.x(),
+            _self.healthBar.position.y(),
+            _self.healthBar.width,
+            _self.healthBar.height
+        );
+    _self.context.fill();
+
+    /**
+     * Draw value
+     */
+    _self.context.fillStyle = _self.healthBar.value.color;
+    _self.context.beginPath();
+    _self.context.rect(
+            _self.healthBar.position.x(),
+            _self.healthBar.position.y(),
+            _self.healthBar.width * 
+            (_self.healthBar.health.health / _self.healthBar.health.maxHealth),
+            _self.healthBar.height
+        );
+    _self.context.fill();
+
+    /**
+     * Draw label
+     */
+    _self.context.textAlign = _self.healthBar.health.textAlign;
+    _self.context.fillStyle = _self.healthBar.label.color;
+    _self.context.font = _self.healthBar.label.font;
+    _self.context.fillText(
+            _self.healthBar.health.health,
+            _self.healthBar.label.position.x(),
+            _self.healthBar.label.position.y()
+        );
 };
 
 /**

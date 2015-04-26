@@ -74,16 +74,86 @@ GameEngine.prototype.feedPlayers = function(players) {
 };
 
 /**
+ * Update user velocity
+ */
+GameEngine.prototype.feedVelocity = function(player) {
+    var _self = this;
+    _self.data.players[player.id].velocity = player.velocity;
+};
+
+/**
  * Feed bullets
  */
 GameEngine.prototype.feedBullets = function(player) {
     var _self = this;
     _self.bullets.push(new Bullet(
             player.id,
-            player.coordinates.x,
-            player.coordinates.y,
+            _self.data.players[player.id].coordinates.x,
+            _self.data.players[player.id].coordinates.y,
             player.rotation
         ));
+};
+
+/**
+ * Reducing player's health and lives on hit
+ */
+GameEngine.prototype.reduceHealth = function(id) {
+    var _self = this;
+
+    if (_self.data.players[id].lives >= 0 && 
+        _self.data.players[id].health > 0) {
+            _self.data.players[id].health -= 10;
+
+        /**
+         * If health is lower than 0, reduce lives and reset health
+         */
+        if (_self.data.players[id].health <= 0 && 
+            _self.data.players[id].lives > 0) {
+                _self.data.players[id].health = 1000;
+                _self.data.players[id].lives -= 1;
+        }
+    } else {
+        _self.data.players[player.id].alive = false;
+    }
+};
+
+/**
+ * Get players health and lives
+ */
+GameEngine.prototype.getHealth = function(id) {
+    var _self = this;
+
+    var data = {
+        'lives': _self.data.players[id].lives,
+        'health': _self.data.players[id].health
+    }
+
+    return data;
+};
+
+/**
+ * Increase score and money
+ */
+GameEngine.prototype.increaseScore = function(id) {
+    var _self = this;
+
+    // Adding 100 score and money per hit
+    _self.data.players[id].score += 100;
+    _self.data.players[id].money += 100;
+};
+
+/**
+ * Get score and money
+ */
+GameEngine.prototype.getScore = function(id) {
+    var _self = this;
+
+    var data = {
+        'score': _self.data.players[id].score,
+        'money': _self.data.players[id].money
+    };
+
+    return data;
 };
 
 /**
@@ -91,6 +161,8 @@ GameEngine.prototype.feedBullets = function(player) {
  */
 GameEngine.prototype.drawPlayers = function() {
     var _self = this;
+
+    _self.updatePlayersCoordinates();
 
     if (_self.data.players) {
         for (var player in _self.data.players) {
@@ -110,6 +182,45 @@ GameEngine.prototype.drawPlayers = function() {
                 _self.context.fill();
             }
         };
+    }
+};
+
+/**
+ * Update player coordinates
+ */
+GameEngine.prototype.updatePlayersCoordinates = function() {
+    var _self = this;
+
+    if (_self.data.players) {
+        for (var player in _self.data.players) {
+            // Check if player is alive (to reduce load)
+            if (_self.data.players[player].alive) {
+                // Gradually make the players velocity 0
+                _self.data.players[player].velocity.x *= _self.data.players[player].friction;
+                _self.data.players[player].velocity.y *= _self.data.players[player].friction;
+
+                // Update position based on velocity
+                _self.data.players[player].coordinates.x += 
+                                _self.data.players[player].velocity.x *
+                                (_self.data.players[player].car.model.speed * 0.5);
+                _self.data.players[player].coordinates.y += 
+                                _self.data.players[player].velocity.y *
+                                (_self.data.players[player].car.model.speed * 0.5);
+
+                // Check if player has gone out of bounds
+                if (_self.data.players[player].coordinates.x < 0)
+                        _self.data.players[player].coordinates.x = 0;
+
+                if (_self.data.players[player].coordinates.x > window.innerWidth)
+                        _self.data.players[player].coordinates.x = window.innerWidth;
+
+                if (_self.data.players[player].coordinates.y < 0)
+                        _self.data.players[player].coordinates.y = 0;
+
+                if (_self.data.players[player].coordinates.y > window.innerHeight)
+                        _self.data.players[player].coordinates.y = window.innerHeight;
+            }
+        }
     }
 };
 
@@ -178,12 +289,25 @@ GameEngine.prototype.collisionDetection = function() {
                             _self.bullets[i].radius
                         )) {
                         if (_self.bullets[i].id != player) {
-                            // Notify server that player got shot
+                            // Reduce victims health
+                            _self.reduceHealth(player);
+
+                            // Increase attacker's score
+                            _self.increaseScore(_self.bullets[i].id);
+
+                            // Feed fresh health and score data to server
                             var data = {
-                                'attacker': _self.bullets[i].id,
-                                'victim': player
+                                'attacker': {
+                                    'id': _self.bullets[i].id,
+                                    'scoreAndMoney': _self.getScore(_self.bullets[i].id)
+                                },
+                                'victim': {
+                                    'id': player,
+                                    'healthAndLives': _self.getHealth(player)
+                                }
                             };
-                            socket.emit('playerGotShot', data);
+
+                            socket.emit('feedHealthAndScore', data);
 
                             // Remove bullet that shot player
                             _self.bullets.splice(i, 1);

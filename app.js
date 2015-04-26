@@ -135,7 +135,7 @@ io.on('connection', function(socket) {
     });
 
     // Lock room and allow clients to select vehicle
-    socket.on('readyToStart', function(display) {
+    socket.on('readyToStart', function() {
 
         // Check if client was part of the group
         if (typeof socket.roomCode !== 'undefined') {
@@ -148,9 +148,6 @@ io.on('connection', function(socket) {
 
                     // Check if there is more than two people in the room
                     if (rooms.list[socket.roomCode].numberOfPlayers() > 1) {
-
-                        // Set display width and height
-                        rooms.list[socket.roomCode].setDisplay(display);
 
                         // Lock room
                         rooms.list[socket.roomCode].lock();
@@ -249,17 +246,19 @@ io.on('connection', function(socket) {
                 // Check if player is alive
                 if (rooms.list[socket.roomCode].players[socket.id].isAlive()) {
 
-                    // Update coordinates
-                    rooms.list[socket.roomCode].players[socket.id].updateCoordinates(
-                        rooms.list[socket.roomCode].getDisplay(),
-                        velocity
-                    );
+                    // Update client's velocity
+                    rooms.list[socket.roomCode].players[socket.id].setVelocity(
+                            velocity
+                        );
 
                     // Sending fresh players data
-                    io.to(rooms.list[socket.roomCode].owner).emit('updateUserData', {
+                    io.to(rooms.list[socket.roomCode].owner).emit('updateUserVelocity', {
                         'status': true,
                         'error': null,
-                        'players': rooms.list[socket.roomCode].players
+                        'player': {
+                            'id': socket.id,
+                            'velocity': rooms.list[socket.roomCode].players[socket.id].getVelocity()
+                        }
                     });
                 }
             }
@@ -286,7 +285,6 @@ io.on('connection', function(socket) {
                         'error': null,
                         'player': {
                             'id': socket.id,
-                            'coordinates': rooms.list[socket.roomCode].players[socket.id].coordinates,
                             'rotation': bullet.rotation
                         }
                     });
@@ -296,26 +294,36 @@ io.on('connection', function(socket) {
     });
 
     /**
-     * Player got shot, reduce his hp/lives add score
+     * Update attacker's score and victims health
      */
-    socket.on('playerGotShot', function(data) {
+    socket.on('feedHealthAndScore', function(data) {
         // Check if client is valid
         if (typeof socket.roomCode !== 'undefined') {
 
             // Check if room exists
             if (rooms.exists(socket.roomCode)) {
-                // Increase score to attacker
-                rooms.list[socket.roomCode].players[data.attacker].increaseScore();
+                // Set attackers score
+                rooms.list[socket.roomCode]
+                    .players[data.attacker.id]
+                    .setScoreAndMoney(
+                            data.attacker.scoreAndMoney
+                        );
+                // TODO emit to attacker fresh score
 
-                // Reduce victims health
-                rooms.list[socket.roomCode].players[data.victim].reduceHealth();
-
-                // Sending fresh players data
-                io.to(rooms.list[socket.roomCode].owner).emit('updateUserData', {
+                // Set victims health
+                rooms.list[socket.roomCode]
+                    .players[data.victim.id]
+                    .setHealthAndLives(
+                            data.victim.healthAndLives
+                        );
+                io.to(data.victim.id).emit('freshHealth', {
                     'status': true,
                     'error': null,
-                    'players': rooms.list[socket.roomCode].players
+                    'health': rooms.list[socket.roomCode]
+                                .players[data.victim.id]
+                                .getHealthAndLives()
                 });
+                // TODO emit to victim fresh health and lives
             }
         }
     });

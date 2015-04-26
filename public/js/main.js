@@ -44,13 +44,8 @@ window.onload = function() {
     connectingReadyBtn.onclick = function(e) {
         e.preventDefault();
 
-        var display = {
-            'width': window.innerWidth,
-            'height': window.innerHeight
-        };
-
         // Emit to app.js
-        socket.emit('readyToStart', display);
+        socket.emit('readyToStart');
     }
 
     socket.on('connectedPeople', function(numb) {
@@ -83,11 +78,11 @@ window.onload = function() {
     });
 
     /**
-     * Fresh players data
+     * Update user velocity
      */
-    socket.on('updateUserData', function(resp) {
+    socket.on('updateUserVelocity', function(resp) {
         if (resp.status) {
-            GameEngine.feedPlayers(resp.players);
+            GameEngine.feedVelocity(resp.player);
         }
     });
 
