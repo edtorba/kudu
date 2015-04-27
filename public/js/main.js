@@ -104,8 +104,6 @@ window.onload = function() {
         if (resp.status) {
             gameState.switchto('scoreboard');
 
-            // TODO Populate score board
-            console.log(resp.players);
             // Clear scoreboard
             scoreboard.innerHTML = '';
 
@@ -124,4 +122,16 @@ window.onload = function() {
             });
         }
     });
+
+    /**
+     * Start round again
+     */
+    var scoreboardReady = document.querySelector('.js--scoreboard--ready');
+
+    scoreboardReady.onclick = function(e) {
+        e.preventDefault();
+
+        // Emit to app.js
+        socket.emit('nextRound');
+    }
 };

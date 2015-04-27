@@ -15,8 +15,8 @@ function Player() {
         }
     };
     this.maxHealth = 1000;
-    this.health = 1000;
-    this.lives = 5;
+    this.health = 300;
+    this.lives = 1;
     this.alive = true;
     this.radius = 30;
     this.coordinates = {
@@ -121,6 +121,17 @@ Player.prototype.resetHealth = function() {
     this.health = 1000;
     this.lives = 5;
     this.alive = true;
+};
+
+/**
+ * Resets player velocity
+ */
+Player.prototype.resetVelocity = function() {
+    this.velocity = {
+        'x': 0,
+        'y': 0,
+        'rotation': 0
+    };
 };
 
 module.exports = Player;

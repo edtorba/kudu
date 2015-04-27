@@ -35,15 +35,15 @@ GameEngine.prototype.loop = function() {
 
     this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
 
+    // Clear screen
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     // Check number of alive players
     if (_self.numbOfAlivePlayers() <= 1) {
         // End round
         socket.emit('endRound', _self.data.players);
         _self.stop();
     }
-
-    // Clear screen
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Delete objects
     _self.deleteBullets();
@@ -65,6 +65,7 @@ GameEngine.prototype.loop = function() {
 GameEngine.prototype.start = function() {
     var _self = this;
     if (!_self.rAFId) {
+        _self.resetGame();
         _self.loop();
     }
 };
@@ -81,12 +82,27 @@ GameEngine.prototype.stop = function() {
 };
 
 /**
+ * Reset game
+ */
+GameEngine.prototype.resetGame = function() {
+    var _self = this;
+
+    _self.bullets = [];
+};
+
+/**
  * Feed players object
  */
 GameEngine.prototype.feedPlayers = function(players) {
     var _self = this;
     _self.data.players = players;
     _self.numberOfAlivePlayers = Object.keys(players).length;
+
+    // Position players in the middle of the screen on start
+    for (var player in _self.data.players) {
+        _self.data.players[player].coordinates.x = window.innerWidth / 2;
+        _self.data.players[player].coordinates.y = window.innerHeight / 2;
+    };
 };
 
 /**
@@ -319,8 +335,8 @@ GameEngine.prototype.collisionDetection = function() {
                     if (_self.objectCollision(
                             _self.data.players[player].coordinates.x,
                             _self.data.players[player].coordinates.y,
-                            _self.data.players[player].radius,
-                            _self.data.players[player].radius,
+                            _self.data.players[player].radius * 2,
+                            _self.data.players[player].radius * 2,
                             _self.bullets[i].coordinates.x,
                             _self.bullets[i].coordinates.y,
                             _self.bullets[i].radius,

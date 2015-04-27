@@ -207,7 +207,7 @@ io.on('connection', function(socket) {
                     /**
                      * Switch game screem to canvas state and send players data.
                      */
-                    io.to(socket.roomCode).emit( 'playersReady', {
+                    io.to(socket.roomCode).emit('playersReady', {
                         'status': true,
                         'error': null,
                         'players': rooms.list[socket.roomCode].players
@@ -382,6 +382,31 @@ io.on('connection', function(socket) {
             'status': true,
             'error': null
         });
+    });
+
+    /**
+     * Next round
+     */
+    socket.on('nextRound', function() {
+        // Check if client is valid
+        if (typeof socket.roomCode !== 'undefined') {
+
+            // Check if room exists
+            if (rooms.exists(socket.roomCode)) {
+                // Reset lives and health
+                for (var player in rooms.list[socket.roomCode].players) {
+                    rooms.list[socket.roomCode].players[player].resetHealth();
+                    rooms.list[socket.roomCode].players[player].resetVelocity();
+                };
+
+                // Start round
+                io.to(socket.roomCode).emit('playersReady', {
+                    'status': true,
+                    'error': null,
+                    'players': rooms.list[socket.roomCode].players
+                });
+            }
+        }
     });
 });
 

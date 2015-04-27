@@ -186,6 +186,7 @@ window.onload = function() {
     // Display score screen
     socket.on('displayScore', function(resp) {
         if (resp.status) {
+            Controller.stop();
             gameState.switchto('display-score');
         }
     });
