@@ -15,8 +15,8 @@ function Player() {
         }
     };
     this.maxHealth = 1000;
-    this.health = 300;
-    this.lives = 1;
+    this.health = 1000;
+    this.lives = 5;
     this.alive = true;
     this.radius = 30;
     this.coordinates = {

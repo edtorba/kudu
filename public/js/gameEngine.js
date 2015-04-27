@@ -333,8 +333,8 @@ GameEngine.prototype.collisionDetection = function() {
             if (_self.data.players[player].alive) {
                 for (var i = 0; i < _self.bullets.length; i++) {
                     if (_self.objectCollision(
-                            _self.data.players[player].coordinates.x,
-                            _self.data.players[player].coordinates.y,
+                            _self.data.players[player].coordinates.x - _self.data.players[player].radius,
+                            _self.data.players[player].coordinates.y - _self.data.players[player].radius,
                             _self.data.players[player].radius * 2,
                             _self.data.players[player].radius * 2,
                             _self.bullets[i].coordinates.x,
@@ -380,6 +380,28 @@ GameEngine.prototype.numbOfAlivePlayers = function() {
     var _self = this;
 
     return _self.numberOfAlivePlayers;
+};
+
+/**
+ * Check if player is in a game
+ */
+GameEngine.prototype.isIn = function(id) {
+    var _self = this;
+
+    return _self.data.players.hasOwnProperty(id);
+};
+
+/**
+ * Player left game
+ */
+GameEngine.prototype.leave = function(id) {
+    var _self = this;
+
+    // Check if player exists
+    if (_self.isIn(id)) {
+        delete _self.data.players[id];
+        _self.numberOfAlivePlayers--;
+    }
 };
 
 /**

@@ -14,7 +14,18 @@ window.onload = function() {
         yell.setText('The game connection has been lost.');
         yell.negative();
         yell.show();
-        // TODO : reset game
+        GameEngine.stop();
+    });
+
+    /**
+     * Player left, not enough players to continue to play
+     */
+    socket.on('notEnoughPlayers', function(resp) {
+        gameState.switchto('main-menu');
+        yell.setText(resp.error);
+        yell.negative();
+        yell.show();
+        GameEngine.stop();
     });
 
     /**
@@ -72,7 +83,6 @@ window.onload = function() {
              */
             GameEngine.feedPlayers(resp.players);
             GameEngine.start();
-            // TODO: Pass data to GameEngine
             gameState.switchto('game');
         }
     });
@@ -133,5 +143,12 @@ window.onload = function() {
 
         // Emit to app.js
         socket.emit('nextRound');
-    }
+    };
+
+    /**
+     * Player left while game was running
+     */
+    socket.on('playerLeft', function(id) {
+        GameEngine.leave(id);
+    });
 };

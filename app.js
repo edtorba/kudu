@@ -45,16 +45,38 @@ io.on('connection', function(socket) {
                         'error': 'Room owner has left the game. The game connection has been lost.'
                     });
                 } else if (rooms.list[socket.roomCode].isIn(socket.id)) {
+                    var roomOwner = rooms.list[socket.roomCode].owner;
                     // Client was a player within a room X, so we have to remove him
                     rooms.list[socket.roomCode].leave(socket.id);
 
                     // Leave room
                     socket.leave(socket.roomCode);
 
+                    // In case if player left during the game, emit to GameEngine
+
+                    // Check number of players left, if less than 2, kick everyone
+                    if (rooms.list[socket.roomCode].numberOfPlayers() >= 2) {
+                        socket.broadcast.to(rooms.list[socket.roomCode].owner).emit(
+                            'playerLeft',
+                            socket.id
+                        );
+                    } else {
+                        io.to(socket.roomCode).emit('notEnoughPlayers', {
+                            'status': null,
+                            'error': 'Player left, not enough players to playe the game'
+                        });
+
+                        rooms.destroy(socket.roomCode);
+                    }
+
                     // Sending number of connected people to owner
-                    socket.broadcast.to(rooms.list[socket.roomCode].owner).emit(
+                    var numberOfPlayersInGame = 0;
+                    if (rooms.exists(socket.roomCode)) {
+                        numberOfPlayersInGame = rooms.list[socket.roomCode].numberOfPlayers();
+                    }
+                    socket.broadcast.to(roomOwner).emit(
                         'connectedPeople',
-                        rooms.list[socket.roomCode].numberOfPlayers()
+                        numberOfPlayersInGame
                     );
                 }
             }

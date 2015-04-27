@@ -17,7 +17,22 @@ window.onload = function() {
         yell.setText(resp.error);
         yell.negative();
         yell.show();
-        // TODO : reset game
+        Controller.stop();
+        Controller.resetHealth();
+        Controller.resetScore();
+    });
+
+    /**
+     * Player left, not enough players to continue to play
+     */
+    socket.on('notEnoughPlayers', function(resp) {
+        gameState.switchto('enter-code');
+        yell.setText(resp.error);
+        yell.negative();
+        yell.show();
+        Controller.stop();
+        Controller.resetHealth();
+        Controller.resetScore();
     });
 
     /**
@@ -187,6 +202,7 @@ window.onload = function() {
     socket.on('displayScore', function(resp) {
         if (resp.status) {
             Controller.stop();
+            Controller.resetHealth();
             gameState.switchto('display-score');
         }
     });

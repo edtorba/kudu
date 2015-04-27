@@ -265,6 +265,28 @@ Controller.prototype.setScore = function(score) {
 };
 
 /**
+ * Reset health
+ */
+Controller.prototype.resetHealth = function() {
+    var _self = this;
+
+    _self.healthBar.health = {
+        'maxHealth': 1000,
+        'health': 1000,
+        'lives': 0
+    };
+};
+
+/**
+ * Reset score
+ */
+Controller.prototype.resetScore = function() {
+    var _self = this;
+
+    _self.playerStats.score = 0;
+};
+
+/**
  * Main loop. That's where everything happenes
  */
 Controller.prototype.loop = function() {
