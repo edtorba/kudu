@@ -87,7 +87,6 @@ window.onload = function() {
     var selectVehicleCarList = document.querySelectorAll('.js--select-vehicle');
     socket.on('switchToSelectVehicle', function(resp) {
         if (resp.status) {
-            // TODO: Refactoring
             // Create list of cars
             var i = 0;
             for (var car in resp.cars) {
@@ -106,7 +105,38 @@ window.onload = function() {
                 i++;
             };
 
-            // Switch to select vehicle state
+            // Switch to enter name status
+            gameState.switchto('enter-name');
+        }
+    });
+
+    /**
+     * Enter name
+     */
+    var enterNameSubmitBtn = document.querySelector('.js--enter-name--submit');
+    enterNameSubmitBtn.onclick = function(e) {
+        e.preventDefault;
+
+        var enterNameName = document.querySelector('.js--enter-name--name');
+
+        // Verify code
+        if (!isEmpty(enterNameName.value)) {
+
+            // Emit to app.js
+            socket.emit('submitName', enterNameName.value);
+        } else {
+            yell.setText('Bad name');
+            yell.negative();
+            yell.show();
+        }
+    };
+
+    /**
+     * Name accepted
+     */
+    socket.on('nameReady', function(resp) {
+        if (resp.status) {
+            // Switch to select vehicle status
             gameState.switchto('select-vehicle');
         }
     });

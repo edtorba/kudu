@@ -193,6 +193,25 @@ io.on('connection', function(socket) {
     });
 
     /**
+     * Submitted name
+     */
+    socket.on('submitName', function(name) {
+        // Check if client was part of the group
+        if (typeof socket.roomCode !== 'undefined') {
+
+            // Check if room exists
+            if (rooms.exists(socket.roomCode)) {
+                rooms.list[socket.roomCode].players[socket.id].setName(name);
+
+                io.to(socket.id).emit('nameReady', {
+                    'status': true,
+                    'error': null
+                });
+            }
+        }
+    });
+
+    /**
      * Client select vehicle event
      */
     socket.on('selectVehicle', function(vehicleName) {

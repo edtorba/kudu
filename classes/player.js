@@ -4,6 +4,7 @@
  * Player Class
  */
 function Player() {
+    this.name = '';
     this.score = 0;
     this.money = 0;
     this.car = {
@@ -34,6 +35,13 @@ function Player() {
 // Check if player has already selected car
 Player.prototype.hasCar = function() {
     return this.car.model != null;
+};
+
+/**
+ * Set name
+ */
+Player.prototype.setName = function(name) {
+    this.name = name;
 };
 
 // Assignes a car object to player

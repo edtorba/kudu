@@ -214,6 +214,19 @@ GameEngine.prototype.drawPlayers = function() {
         for (var player in _self.data.players) {
             // Check if player is alive
             if (_self.data.players[player].alive) {
+                // Draw name
+                _self.context.save();
+                _self.context.textAlign = 'center';
+                _self.context.fillStyle = '#ffffff';
+                _self.context.font = '16px Consolas';
+                _self.context.fillText(
+                        _self.data.players[player].name,
+                        _self.data.players[player].coordinates.x,
+                        _self.data.players[player].coordinates.y - _self.data.players[player].radius - 15
+                    );
+                _self.context.restore();
+
+                // Draw car
                 _self.context.save();
                 _self.context.translate(
                         _self.data.players[player].coordinates.x,
