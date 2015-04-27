@@ -94,4 +94,34 @@ window.onload = function() {
             GameEngine.feedBullets(resp.player);
         }
     });
+
+    /**
+     * Switch to score state
+     */
+    var scoreboard = document.querySelector('.js--scoreboard');
+
+    socket.on('showScore', function(resp) {
+        if (resp.status) {
+            gameState.switchto('scoreboard');
+
+            // TODO Populate score board
+            console.log(resp.players);
+            // Clear scoreboard
+            scoreboard.innerHTML = '';
+
+            // Sort results
+            var sortable = [];
+            for (var player in resp.players) {
+                sortable.push([player, resp.players[player].score]);
+            };
+            sortable.sort(function(a, b) {return a[1] + b[1]});
+
+            // Populate scoreboard
+            eachNode(sortable, function(node) {
+                var list = createEle(false, 'li');
+                list.innerHTML = node[1];
+                scoreboard.appendChild(list);
+            });
+        }
+    });
 };

@@ -9,6 +9,7 @@ function GameEngine() {
     this.rAFId;
     this.data = {};
     this.bullets = [];
+    this.numberOfAlivePlayers = 0;
 
     // Background image
     this.background = new Image();
@@ -33,6 +34,13 @@ GameEngine.prototype.loop = function() {
     var _self = this;
 
     this.rAFId = window.requestAnimationFrame(_self.loop.bind(this));
+
+    // Check number of alive players
+    if (_self.numbOfAlivePlayers() <= 1) {
+        // End round
+        socket.emit('endRound', _self.data.players);
+        _self.stop();
+    }
 
     // Clear screen
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -78,6 +86,7 @@ GameEngine.prototype.stop = function() {
 GameEngine.prototype.feedPlayers = function(players) {
     var _self = this;
     _self.data.players = players;
+    _self.numberOfAlivePlayers = Object.keys(players).length;
 };
 
 /**
@@ -121,6 +130,7 @@ GameEngine.prototype.reduceHealth = function(id) {
                 socket.emit('playerLostLife', id);
         }
     } else {
+        _self.numberOfAlivePlayers--;
         _self.data.players[id].alive = false;
         socket.emit('playerDied', id);
     }
@@ -345,6 +355,15 @@ GameEngine.prototype.collisionDetection = function() {
             }
         }
     }
+};
+
+/**
+ * Get number of alive players
+ */
+GameEngine.prototype.numbOfAlivePlayers = function() {
+    var _self = this;
+
+    return _self.numberOfAlivePlayers;
 };
 
 /**

@@ -348,6 +348,41 @@ io.on('connection', function(socket) {
     socket.on('playerDied', function(id) {
         rooms.list[socket.roomCode].players[id].kill();
     });
+
+    /**
+     * End game round
+     */
+    socket.on('endRound', function(players) {
+        // Update players score
+
+        // Check if client is valid
+        if (typeof socket.roomCode !== 'undefined') {
+
+            // Check if room exists
+            if (rooms.exists(socket.roomCode)) {
+                for (var player in players) {
+                    rooms.list[socket.roomCode].players[player].setScoreAndMoney(
+                            {
+                                'score': players[player].score,
+                                'money': players[player].money
+                            }
+                        );
+                }
+            }
+        }
+        // Switch browser to score state
+        io.to(rooms.list[socket.roomCode].owner).emit('showScore', {
+            'status': true,
+            'error': null,
+            'players': rooms.list[socket.roomCode].players
+        });
+
+        // Switch controllers to wait screen
+        io.to(socket.roomCode).emit('displayScore', {
+            'status': true,
+            'error': null
+        });
+    });
 });
 
 http.listen(3000, function() {

@@ -182,4 +182,11 @@ window.onload = function() {
             window.navigator.vibrate(1000);
         }
     });
+
+    // Display score screen
+    socket.on('displayScore', function(resp) {
+        if (resp.status) {
+            gameState.switchto('display-score');
+        }
+    });
 };
