@@ -122,14 +122,16 @@ window.onload = function() {
             for (var player in resp.players) {
                 sortable.push([resp.players[player].name, resp.players[player].score]);
             };
-            sortable.sort(function(a, b) {return a[1] + b[1]});
+            sortable.sort(function(a, b) {return a[1] - b[1]});
 
             // Populate scoreboard
-            eachNode(sortable, function(node) {
+            var i = sortable.length;
+            while(i--)
+            {
                 var list = createEle(false, 'li');
-                list.innerHTML = node[0] + ' ' + node[1];
+                list.innerHTML = sortable[i][0] + ' ' + sortable[i][1];
                 scoreboard.appendChild(list);
-            });
+            }
         }
     });
 
