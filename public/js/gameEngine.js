@@ -129,12 +129,13 @@ GameEngine.prototype.feedBullets = function(player) {
 /**
  * Reducing player's health and lives on hit
  */
-GameEngine.prototype.reduceHealth = function(id) {
+GameEngine.prototype.reduceHealth = function(id, attackerID) {
     var _self = this;
 
     if (_self.data.players[id].lives >= 0 && 
         _self.data.players[id].health > 0) {
-            _self.data.players[id].health -= 10;
+            _self.data.players[id].health -= _self.data.players[attackerID].car.model.power / _self.data.players[id].car.model.armor * 
+                10;
 
         /**
          * If health is lower than 0, reduce lives and reset health
@@ -357,7 +358,7 @@ GameEngine.prototype.collisionDetection = function() {
                         )) {
                         if (_self.bullets[i].id != player) {
                             // Reduce victims health
-                            _self.reduceHealth(player);
+                            _self.reduceHealth(player, _self.bullets[i].id);
 
                             // Increase attacker's score
                             _self.increaseScore(_self.bullets[i].id);
