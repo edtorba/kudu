@@ -43,7 +43,6 @@ window.onload = function() {
         yell.setText('The game connection has been lost.');
         yell.negative();
         yell.show();
-        // TODO : reset game
     });
 
     /**
